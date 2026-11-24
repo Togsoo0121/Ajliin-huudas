@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="artifact-type" content="narrative">
+<meta name="design-style" content="briefing">
+<title>Монгол Улсын засаг захиргаа, нутаг дэвсгэрийн хуваарийн хувьсал — Интерактив ажлын хуудас</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+<style>
+:root {
+  color-scheme: light;
+
+  /* Briefing Style Palette */
+  --background: #faf9f5;
+  --surface-container-low: #ffffff;
+  --surface-container: #f1efe8;
+  --surface-container-high: #e6e2d6;
+
+  --on-surface: #17181a;
+  --on-surface-variant: #56585c;
+
+  --outline: #17181a;
+  --outline-variant: #dedad0;
+  --button-border: #c8c4b8;
+
+  --primary: #17181a;
+  --on-primary: #faf9f5;
+  --primary-container: #f2b705;
+  --on-primary-container: #17181a;
+  --secondary: #1f4e5f;
+  --secondary-tint: #e8f0f2;
+  --tertiary: #785008;
+  --tag-warm-bg: #f5e6c4;
+  --error: #b42318;
+  --error-bg: #fef3f2;
+  --on-error: #ffffff;
+
+  /* Semantic tokens */
+  --positive: #2b6e52;
+  --positive-bg: #ebf5f0;
+  --warning: #9a5b00;
+  --warning-bg: #fdf6e7;
+  --focus: #1f4e5f;
+
+  /* Data series */
+  --data-1: #1f4e5f;
+  --data-2: #d99000;
+  --data-3: #2b6e52;
+  --data-4: #b84a39;
+  --data-context: #c4bfb2;
+  --map-land: #f6f4ec;
+  --map-hover: #efe8d4;
+
+  /* Fonts — Noto Serif/Sans/IBM Plex Mono for full Mongolian Cyrillic support */
+  --font-headline: 'Noto Serif', serif;
+  --font-body: 'Noto Sans', sans-serif;
+  --font-label: 'IBM Plex Mono', 'Noto Sans', monospace;
+
+  /* Shape & Style Effects */
+  --rounded: 0.25rem;
+  --rounded-lg: 0.375rem;
+  --rounded-full: 0.25rem;
+  --section-rule: 1.5px solid var(--outline);
+  --card-border: 1px solid var(--outline-variant);
+  --badge-radius: 2px;
+  --heading-tracking: -0.015em;
+  --label-tracking: 0em;
+
+  /* Type Scale (Narrative + Educational Dossier) */
+  --display-size: clamp(2rem, 1.4rem + 2.4vw, 3.125rem);
+  --headline-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --subhead-size: clamp(1.125rem, 1.04rem + 0.4vw, 1.3125rem);
+  --body-size: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+  /* Spacing scale (4pt base) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+}
+
+/* Base Reset */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+header { position: static !important; }
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-xl);
+  padding: var(--space-lg);
+  max-width: 1180px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.page-grid * { min-width: 0; }
+
+/* Focus rings */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Dossier Section Bars & Headlines */
+.dossier-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  border-bottom: var(--section-rule);
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.dossier-bar-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.dossier-pill {
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--badge-radius);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.dossier-pill--history {
+  background: var(--secondary);
+  color: var(--on-primary);
+}
+.dossier-pill--geo {
+  background: var(--positive);
+  color: var(--on-primary);
+}
+.dossier-meta {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: var(--display-size);
+  letter-spacing: var(--heading-tracking);
+  line-height: 1.12;
+  color: var(--on-surface);
+  margin: 0 0 var(--space-sm) 0;
+}
+.standfirst {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--subhead-size);
+  color: var(--secondary);
+  line-height: 1.45;
+  margin: 0;
+  max-width: 68ch;
+}
+.section-heading {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: var(--headline-size);
+  line-height: 1.18;
+  color: var(--on-surface);
+  margin: 0 0 var(--space-xs) 0;
+}
+.section-deck {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--body-size);
+  color: var(--secondary);
+  margin: 0 0 var(--space-md) 0;
+  max-width: 68ch;
+}
+.sub-heading {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  font-size: var(--subhead-size);
+  line-height: 1.28;
+  color: var(--on-surface);
+  margin: 0 0 var(--space-sm) 0;
+}
+.index-num {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: var(--label-size);
+  color: var(--secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cards & Surfaces */
+.figure-card {
+  background: var(--surface-container-low);
+  border: var(--card-border);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-lg);
+}
+.figure-card--compact {
+  padding: var(--space-md);
+}
+.aside-box {
+  background: var(--surface-container);
+  border-top: var(--section-rule);
+  border-radius: 0 0 var(--rounded-lg) var(--rounded-lg);
+  padding: var(--space-lg);
+}
+
+/* Student Header & Controls */
+.student-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: var(--space-md);
+  align-items: end;
+  margin-top: var(--space-lg);
+}
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.field-label {
+  font-size: var(--label-size);
+  font-weight: 600;
+  color: var(--on-surface);
+}
+.field-hint {
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+.text-input, .select-input, .textarea-input {
+  width: 100%;
+  background: var(--surface-container-low);
+  border: 1px solid var(--button-border);
+  border-radius: var(--rounded);
+  padding: var(--space-sm) var(--space-md);
+  min-height: 44px;
+  color: var(--on-surface);
+  transition: box-shadow var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+}
+.select-input {
+  padding-right: var(--space-xl);
+}
+.textarea-input {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.55;
+}
+.text-input:hover, .select-input:hover, .textarea-input:hover {
+  background: var(--background);
+}
+.text-input:focus-visible, .select-input:focus-visible, .textarea-input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 0;
+  box-shadow: 0 0 0 3px var(--secondary-tint);
+}
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 44px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--rounded);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--secondary);
+}
+.btn--secondary {
+  background: var(--surface-container-low);
+  color: var(--on-surface);
+  border-color: var(--button-border);
+}
+.btn--secondary:hover:not(:disabled) {
+  background: var(--surface-container);
+}
+.btn--accent {
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  border-color: var(--outline);
+}
+.btn--accent:hover:not(:disabled) {
+  background: var(--tag-warm-bg);
+}
+.btn--danger {
+  background: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+/* Navigation Strip */
+.jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-top: var(--card-border);
+  border-bottom: var(--card-border);
+  margin-top: var(--space-md);
+}
+.jump-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  min-height: 36px;
+  text-decoration: none;
+  color: var(--secondary);
+  font-weight: 600;
+  font-size: var(--label-size);
+  border-radius: var(--rounded);
+  background: var(--surface-container-low);
+  border: var(--card-border);
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+.jump-link:hover {
+  background: var(--surface-container);
+  color: var(--on-surface);
+}
+
+/* Proportion & Progress Bars */
+.balance-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: center;
+}
+.proportion-track {
+  display: flex;
+  width: 100%;
+  height: 28px;
+  border-radius: var(--rounded);
+  overflow: hidden;
+  border: 1px solid var(--outline);
+}
+.proportion-history {
+  width: 70%;
+  background: var(--data-1);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 600;
+}
+.proportion-geo {
+  width: 30%;
+  background: var(--data-3);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 600;
+}
+.progress-bar-wrap {
+  width: 100%;
+  height: 12px;
+  background: var(--surface-container-high);
+  border-radius: var(--rounded);
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--data-2);
+  transition: width var(--dur-short) var(--ease-out);
+}
+
+/* Key Stats Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: var(--space-md);
+}
+.kpi-value {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  color: var(--on-surface);
+  margin: var(--space-xs) 0;
+}
+.kpi-caption {
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+/* Section 01: Asymmetric Theory Split (70% History / 30% Geography) */
+.theory-split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+.timeline-list {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.timeline-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: var(--card-border);
+}
+.timeline-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.era-badge {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: var(--label-size);
+  background: var(--tag-warm-bg);
+  color: var(--tertiary);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--rounded);
+  height: fit-content;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.geo-facts-list {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.geo-fact-block {
+  background: var(--surface-container-low);
+  border: var(--card-border);
+  border-radius: var(--rounded);
+  padding: var(--space-md);
+}
+
+/* Bloom Badges */
+.bloom-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--badge-radius);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 600;
+  background: var(--surface-container);
+  color: var(--on-surface);
+  border: var(--card-border);
+}
+.tag-history {
+  background: var(--secondary-tint);
+  color: var(--secondary);
+  border-color: var(--secondary);
+}
+.tag-geo {
+  background: var(--positive-bg);
+  color: var(--positive);
+  border-color: var(--positive);
+}
+
+/* Interactive Tasks Layout */
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--space-lg);
+}
+.quiz-question {
+  padding: var(--space-md);
+  background: var(--background);
+  border: var(--card-border);
+  border-radius: var(--rounded);
+  margin-bottom: var(--space-md);
+}
+.quiz-options {
+  display: grid;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 44px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--rounded);
+  border: var(--card-border);
+  background: var(--surface-container-low);
+  cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+.option-label:hover {
+  background: var(--surface-container);
+}
+.option-label input[type="radio"],
+.option-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--secondary);
+  flex-shrink: 0;
+}
+
+.feedback-banner {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--rounded);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  display: none;
+}
+.feedback-banner.is-visible { display: block; }
+.feedback-banner--ok {
+  background: var(--positive-bg);
+  color: var(--positive);
+  border-left: 4px solid var(--positive);
+}
+.feedback-banner--warn {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border-left: 4px solid var(--warning);
+}
+.feedback-banner--err {
+  background: var(--error-bg);
+  color: var(--error);
+  border-left: 4px solid var(--error);
+}
+
+/* Interactive Map Lab */
+.map-lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+.svg-map-wrap {
+  background: var(--surface-container);
+  border: var(--card-border);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-md);
+  min-height: 360px;
+}
+.map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.map-region {
+  cursor: pointer;
+  transition: fill var(--dur-micro) var(--ease-out), stroke-width var(--dur-micro) var(--ease-out);
+}
+.map-region:hover {
+  fill: var(--map-hover);
+}
+.map-region.is-selected {
+  fill: var(--tag-warm-bg);
+  stroke: var(--outline);
+  stroke-width: 2.5;
+}
+.map-layer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+.layer-btn {
+  min-height: 40px;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--label-size);
+  font-weight: 600;
+  border-radius: var(--rounded);
+  border: 1px solid var(--button-border);
+  background: var(--surface-container-low);
+  cursor: pointer;
+}
+.layer-btn.is-active {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+
+/* Tables */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface-container-low);
+  font-size: 0.9375rem;
+}
+.data-table th {
+  text-align: left;
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 600;
+  color: var(--on-surface);
+  background: var(--surface-container);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: var(--section-rule);
+}
+.data-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: var(--card-border);
+  vertical-align: top;
+}
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+.num-cell {
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Mind Map Framework */
+.mindmap-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+.mindmap-canvas {
+  background: var(--background);
+  border: var(--card-border);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-md);
+  min-height: 380px;
+}
+.mindmap-node {
+  cursor: pointer;
+  transition: opacity var(--dur-micro) var(--ease-out);
+}
+.mindmap-node:hover { opacity: 0.88; }
+.custom-nodes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+.node-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--rounded);
+  font-size: var(--label-size);
+  font-weight: 600;
+  border: var(--card-border);
+  background: var(--surface-container-low);
+}
+.node-chip button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--error);
+  font-weight: 700;
+  padding: 0 var(--space-xs);
+}
+
+/* Checklist */
+.checklist-table {
+  display: grid;
+  gap: var(--space-sm);
+}
+.checklist-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--background);
+  border: var(--card-border);
+  border-radius: var(--rounded);
+}
+
+/* Teacher Section */
+.teacher-section {
+  border-top: 3px solid var(--outline);
+  padding-top: var(--space-lg);
+}
+.teacher-body {
+  display: none;
+  margin-top: var(--space-lg);
+}
+.teacher-body.is-open {
+  display: grid;
+  gap: var(--space-lg);
+}
+.answer-key-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--space-md);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 860px) {
+  .theory-split,
+  .map-lab,
+  .mindmap-grid,
+  .balance-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .page-grid {
+    padding: var(--space-md);
+    gap: var(--space-lg);
+  }
+  .figure-card, .aside-box {
+    padding: var(--space-md);
+  }
+  .checklist-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .timeline-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xs);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .jump-nav, .btn-row, .no-print { display: none !important; }
+  .teacher-body { display: grid !important; }
+  body { background: var(--surface-container-low); }
+  .figure-card, .aside-box { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<main class="page-grid">
+
+  <!-- HEADER & DOSSIER OVERVIEW -->
+  <header class="figure-card" aria-label="Ажлын хуудасны нүүр хэсэг">
+    <div class="dossier-bar">
+      <div class="dossier-bar-left">
+        <span class="dossier-pill">АЖЛЫН ХУУДАС</span>
+        <span class="dossier-pill dossier-pill--history">ТҮҮХ 70%</span>
+        <span class="dossier-pill dossier-pill--geo">ГАЗАР ЗҮЙ 30%</span>
+        <span class="dossier-meta">ЕБС VIII–X АНГИ · БЛУМЫН 6 ТҮВШИН</span>
+      </div>
+      <span class="dossier-meta" id="save-status">Хадгалах төлөв: Бэлэн</span>
+    </div>
+
+    <h1 class="title">Монгол Улсын засаг захиргаа, нутаг дэвсгэрийн хуваарийн хувьсал</h1>
+    <p class="standfirst">Их Монгол Улсын мянгатын тогтолцооноос орчин үеийн 21 аймаг, 330 сум хүртэлх түүхэн замнал ба газар зүйн орон зайн нөхцөл байдлын интерактив судалгааны дэвтэр</p>
+
+    <div class="student-panel">
+      <div class="field-group">
+        <label class="field-label" for="student-name">Сурагчийн овог, нэр</label>
+        <input class="text-input" id="student-name" type="text" placeholder="Жишээ: Б.Тэмүүлэн" oninput="updateStudentField('name', this.value)">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="student-class">Анги, бүлэг</label>
+        <input class="text-input" id="student-class" type="text" placeholder="Жишээ: 8А анги" oninput="updateStudentField('className', this.value)">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="student-date">Огноо</label>
+        <input class="text-input" id="student-date" type="date" value="2026-11-23" oninput="updateStudentField('date', this.value)">
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn--primary" onclick="exportWorksheet()">
+          <i data-lucide="download" aria-hidden="true"></i>
+          Хураангуй татах
+        </button>
+        <button type="button" class="btn btn--secondary" onclick="window.print()">
+          <i data-lucide="printer" aria-hidden="true"></i>
+          Хэвлэх
+        </button>
+        <button type="button" class="btn btn--danger" id="reset-btn" onclick="handleReset(this)">
+          <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+          Шинэчлэх
+        </button>
+      </div>
+    </div>
+
+    <nav class="jump-nav" aria-label="Бүлгүүдийн холбоос">
+      <a class="jump-link" href="#sec-balance">01 · Агуулгын бүтэц</a>
+      <a class="jump-link" href="#sec-theory">02 · Онолын лавламж</a>
+      <a class="jump-link" href="#sec-bloom-1-3">03 · Түвшин 1–3 (Мэдэх–Хэрэглэх)</a>
+      <a class="jump-link" href="#sec-bloom-4-5">04 · Түвшин 4–5 (Шинжлэх–Үнэлэх)</a>
+      <a class="jump-link" href="#sec-bloom-6">05 · Түвшин 6 (Оюуны зураглал ба Төсөл)</a>
+      <a class="jump-link" href="#sec-self-eval">06 · Өөрийн үнэлгээ</a>
+      <a class="jump-link" href="#sec-teacher">07 · Багшийн 20 онооны рубрик</a>
+    </nav>
+  </header>
+
+  <!-- 01. CONTENT BALANCE (70% HISTORY / 30% GEOGRAPHY) & PROGRESS -->
+  <section id="sec-balance" aria-label="Агуулгын харьцаа ба гүйцэтгэлийн явц">
+    <div class="figure-card balance-card">
+      <div>
+        <div class="dossier-bar">
+          <div class="dossier-bar-left">
+            <span class="index-num">01</span>
+            <span class="dossier-meta">ИНТЕГРАЦЧИЛСАН АГУУЛГЫН ХАРЬЦАА</span>
+          </div>
+          <span class="dossier-meta">НИЙТ 20 ОНОО</span>
+        </div>
+        <p style="margin: 0 0 var(--space-sm) 0;">Энэхүү ажлын хуудас нь засаг захиргаа, нутаг дэвсгэрийн хуваарийн <strong>түүхэн хувьсал (70% · 14 оноо)</strong> болон түүнд нөлөөлсөн <strong>газар зүйн орон зай, байгалийн бүс, хүн амын хүчин зүйлсийг (30% · 6 оноо)</strong> уялдуулан судлахаар бүтээгдсэн.</p>
+        <div class="proportion-track" role="img" aria-label="Агуулгын харьцаа: Түүх 70 хувь, Газар зүй 30 хувь">
+          <div class="proportion-history">Түүх 70% (14 оноо)</div>
+          <div class="proportion-geo">Газар зүй 30% (6 оноо)</div>
+        </div>
+      </div>
+
+      <div class="aside-box" style="border-radius: var(--rounded-lg);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-xs);">
+          <span class="field-label">Ажлын хуудасны гүйцэтгэл</span>
+          <span class="index-num" id="progress-text">0 / 12 даалгавар (0%)</span>
+        </div>
+        <div class="progress-bar-wrap" aria-hidden="true">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <p class="kpi-caption" style="margin-top: var(--space-sm);">Таны бичсэн хариулт, сонголт, оюуны зураглал болон өөрийн үнэлгээ автоматаар хадгалагдана.</p>
+      </div>
+    </div>
+
+    <div class="kpi-grid" style="margin-top: var(--space-lg);">
+      <div class="figure-card figure-card--compact">
+        <span class="dossier-meta">ТҮҮХЭН ҮЕ ШАТ</span>
+        <div class="kpi-value">5 гол үе</div>
+        <p class="kpi-caption">XIII зууны мянгатаас 1992 оны Үндсэн хуулийн тогтолцоо хүртэл</p>
+      </div>
+      <div class="figure-card figure-card--compact">
+        <span class="dossier-meta">ӨНӨӨГИЙН БҮТЭЦ</span>
+        <div class="kpi-value">21 аймаг · 330 сум</div>
+        <p class="kpi-caption">Мөн нийслэл Улаанбаатар хотын 9 дүүрэг, хорооны нэгж</p>
+      </div>
+      <div class="figure-card figure-card--compact">
+        <span class="dossier-meta">ГАЗАР ЗҮЙН ӨНДӨРЖИЛТ</span>
+        <div class="kpi-value">д.т.д. 1580 м</div>
+        <p class="kpi-caption">Нутгийн 80% нь 1000 м-ээс өндөр; Хүйтэн 4374 м, Хөх нуур 560 м</p>
+      </div>
+      <div class="figure-card figure-card--compact">
+        <span class="dossier-meta">НУТГИЙН СУНАЛТ</span>
+        <div class="kpi-value">2392 × 1259 км</div>
+        <p class="kpi-caption">Өргөргийн дагуу сунасан (10°34′ өргөрөг, 32°12′ уртраг зөрүүтэй)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02. THEORY BRIEF (70% HISTORY / 30% GEOGRAPHY) -->
+  <section id="sec-theory" aria-label="Түүх ба Газар зүйн онолын лавламж">
+    <div class="dossier-bar">
+      <div class="dossier-bar-left">
+        <span class="dossier-pill">02 · ОНОЛЫН ЛАВЛАМЖ</span>
+        <span class="dossier-meta">ЭХ СУРВАЛЖ ДЭЭР СУУРИЛСАН ХУРААНГУЙ</span>
+      </div>
+      <span class="dossier-meta">ТҮҮХ 70% · ГАЗАР ЗҮЙ 30%</span>
+    </div>
+
+    <div class="theory-split">
+      <!-- 70% History Column -->
+      <article class="figure-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:var(--space-sm); margin-bottom:var(--space-md);">
+          <h2 class="section-heading" style="margin:0;">Засаг захиргааны түүхэн хувьсал</h2>
+          <span class="bloom-tag tag-history">Түүх 70%</span>
+        </div>
+        <p class="section-deck">Нүүдэлчдийн төр ёсны уламжлал ба улс төрийн өөрчлөлтийг даган засаг захиргаа, нутаг дэвсгэрийн нэгж хэрхэн хувьсаж ирсэн бэ?</p>
+
+        <ol class="timeline-list">
+          <li class="timeline-item">
+            <span class="era-badge">1206–XIV зуун</span>
+            <div>
+              <strong>Их Монгол Улс ба Мянгатын тогтолцоо:</strong> Чингис хаан 1206 онд овгийн хуваарийг халж, <em>аравт, зуут, мянгат, түмэн</em> хэмээх цэрэг-засаг захиргааны нэгдмэл аравтын тогтолцоог тогтоосон. Улсын нутаг дэвсгэрийг Баруун (Алтайн чиг), Төв (Хангай, Хэнтий), Зүүн (Хянганы чиг) буюу Гурван түмэнд хувааж, нийслэл Хархорумыг төвлөрүүлсэн.
+            </div>
+          </li>
+          <li class="timeline-item">
+            <span class="era-badge">1691–1911 он</span>
+            <div>
+              <strong>Манж Чин улсын үеийн аймаг, хошууны хуваарь:</strong> Халх Монголыг Түшээт хан, Сэцэн хан, Засагт хан, Сайн ноён хан гэсэн <em>4 аймаг</em> болгон хувааж, баруун хязгаарт Ховдын хязгаар (Дөрвөдийн 2 аймаг), хойд хэсэгт Хөвсгөлийн хязгаарыг тусгаарлан захирсан. Аймаг нь олон жижиг <em>хошуу, сум, баг</em> болон хуваагдаж, ноёдын эзэмшил нутаг хил хязгаараар хатуу зааглагдсан.
+            </div>
+          </li>
+          <li class="timeline-item">
+            <span class="era-badge">1911–1930 он</span>
+            <div>
+              <strong>Богд Хаант Монгол Улс ба 1923 оны нэршлийн шинэчлэл:</strong> 1911 онд тусгаар тогтнолоо сэргээсний дараа 4 аймаг, Ховдын хязгаар хэвээр үлдсэн ч 1921 оны хувьсгалын дараа 1923 онд «Нутгийн захиргааны дүрэм» батлан, хан ноёдын нэрээр нэрлэсэн хуучин аймгуудыг газар зүйн <em>уул, усны нэрээр</em> сольсон: Богд хан уулын, Хан Хэнтий уулын, Цэцэрлэг Мандал уулын, Хантайшир уулын, Чандмань уулын аймаг.
+            </div>
+          </li>
+          <li class="timeline-item">
+            <span class="era-badge">1931–1991 он</span>
+            <div>
+              <strong>1931 оны Засаг захиргааны их өөрчлөлт ба БНМАУ:</strong> 1931 онд хуучин хошууны тогтолцоог бүрэн халж, эдийн засаг-газар зүйн бүсчлэлд тулгуурлан шинээр <em>13 аймаг, 311 сум</em> байгуулсан нь орчин үеийн бүтцийн суурь болжээ. Улмаар 1940–1980-аад онд нутгийн төвлөрлийг задалж <em>18 аймаг, 3 хот</em> (Улаанбаатар, Дархан, Эрдэнэт) болж өргөжсөн.
+            </div>
+          </li>
+          <li class="timeline-item">
+            <span class="era-badge">1992–Өнөө үе</span>
+            <div>
+              <strong>Ардчилсан Монгол Улсын Үндсэн хуулийн тогтолцоо:</strong> 1992 оны Үндсэн хуулийн 57 дугаар зүйлээр Монгол Улсын нутаг дэвсгэрийг аймаг, нийслэлд; аймгийг суманд, сумыг багт; нийслэлийг дүүрэгт, дүүргийг хороонд хуваасан. 1994 онд Дархан-Уул, Орхон, Говьсүмбэр аймгууд байгуулагдсанаар өнөөгийн <strong>21 аймаг, 330 сум, нийслэл Улаанбаатар (9 дүүрэг)</strong> бүрдсэн.
+            </div>
+          </li>
+        </ol>
+      </article>
+
+      <!-- 30% Geography Column -->
+      <aside class="aside-box">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:var(--space-sm); margin-bottom:var(--space-md);">
+          <h2 class="sub-heading" style="margin:0;">Газар зүйн орон зайн нөхцөл</h2>
+          <span class="bloom-tag tag-geo">Газар зүй 30%</span>
+        </div>
+        <p class="field-hint" style="margin: 0 0 var(--space-md) 0;">«Газар зүй VIII» сурах бичгийн өгөгдөлд тулгуурласан орон зайн суурь үзүүлэлтүүд:</p>
+
+        <ul class="geo-facts-list">
+          <li class="geo-fact-block">
+            <strong>Байрлал ба 4 захын цэг:</strong> Дэлхийн хойд хагас, Ази тивийн төвд, Номхон далайгаас 1000 гаруй км алслагдсан далайд гарцгүй орон.
+            <br><span class="dossier-meta">Хойд: Монгол шарын даваа (х.ө 52°09′ з.у 98°57′)</span>
+            <br><span class="dossier-meta">Өмнөд: Орвог гашууны бор толгой (х.ө 41°35′ з.у 105°00′)</span>
+            <br><span class="dossier-meta">Баруун: Мааньт уул (х.ө 48°35′ з.у 87°44′)</span>
+            <br><span class="dossier-meta">Зүүн: Модтой хамар (х.ө 46°43′ з.у 119°56′)</span>
+          </li>
+          <li class="geo-fact-block">
+            <strong>Гадарга ба өндөржилт:</strong> Баруун, хойд хэсэгтээ Монгол Алтай, Хангай, Хөвсгөл, Хэнтийн уулстай; зүүн, өмнө хэсэгтээ Дорнод Монголын тал, говьтой. Нутаг дэвсгэрийн 80 орчим хувь нь д.т.д. 1000 м-ээс өндөр.
+          </li>
+          <li class="geo-fact-block">
+            <strong>Уур амьсгал ба ус зүй:</strong> Эх газрын эрс тэс уур амьсгалтай (сүүлийн 76 жилд +2.24°C дулаарсан). Ойт хээр, хээр, говь, цөлийн 4 бүс болон голын 29 сав газар ялгардаг.
+          </li>
+          <li class="geo-fact-block">
+            <strong>Хүн амын өсөлт ба тархалт:</strong> 1918 онд 647 мянга → 1966 онд 1 сая → 1988 онд 2 сая → 2015 онд 3 сая хүрсэн. Тархалтад гадарга, уур амьсгал, ус, дэд бүтэц шууд нөлөөлдөг.
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 03. BLOOM'S LEVELS 1–3: KNOWLEDGE, UNDERSTANDING, APPLICATION -->
+  <section id="sec-bloom-1-3" aria-label="Блумын таксономи: Мэдэх, Ойлгох, Хэрэглэх түвшний даалгаврууд">
+    <div class="dossier-bar">
+      <div class="dossier-bar-left">
+        <span class="dossier-pill">03 · БЛУМЫН ТАКСОНОМИ (ТҮВШИН 1–3)</span>
+        <span class="dossier-meta">МЭДЭХ · ОЙЛГОХ · ХЭРЭГЛЭХ</span>
+      </div>
+      <span class="dossier-meta">ШУУРХАЙ ШАЛГАЛТТАЙ ДАСГАЛУУД</span>
+    </div>
+
+    <div class="task-grid">
+      <!-- LEVEL 1: KNOWLEDGE -->
+      <article class="figure-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+          <span class="bloom-tag">Түвшин 1 · Мэдэх (Сэргээн санах)</span>
+          <span class="bloom-tag tag-history">Түүх + Газар зүй</span>
+        </div>
+        <h3 class="sub-heading">Даалгавар 1А ба 1Б: Түүхэн баримт ба Газар зүйн цэгийг таних</h3>
+
+        <div class="quiz-question">
+          <strong>1. (Түүх) 1923 оны «Нутгийн захиргааны дүрэм»-ээр хуучин Сэцэн хан аймгийг ямар уул, усны нэрээр нэрлэсэн бэ?</strong>
+          <div class="quiz-options">
+            <label class="option-label"><input type="radio" name="q1" value="a" onchange="saveQuiz('q1', this.value)"> Богд хан уулын аймаг</label>
+            <label class="option-label"><input type="radio" name="q1" value="b" onchange="saveQuiz('q1', this.value)"> Хан Хэнтий уулын аймаг</label>
+            <label class="option-label"><input type="radio" name="q1" value="c" onchange="saveQuiz('q1', this.value)"> Хантайшир уулын аймаг</label>
+          </div>
+        </div>
+
+        <div class="quiz-question">
+          <strong>2. (Түүх) Одоогийн 21 аймгийн бүтэц хэзээ Дархан-Уул, Орхон, Говьсүмбэр аймгууд байгуулагдсанаар бүрэлдсэн бэ?</strong>
+          <div class="quiz-options">
+            <label class="option-label"><input type="radio" name="q2" value="a" onchange="saveQuiz('q2', this.value)"> 1931 оны засаг захиргааны шинэчлэлээр</label>
+            <label class="option-label"><input type="radio" name="q2" value="b" onchange="saveQuiz('q2', this.value)"> 1994 онд, 1992 оны Үндсэн хуулийн дараа</label>
+            <label class="option-label"><input type="radio" name="q2" value="c" onchange="saveQuiz('q2', this.value)"> 1911 оны Үндэсний эрх чөлөөний хувьсгалаар</label>
+          </div>
+        </div>
+
+        <div class="quiz-question">
+          <strong>3. (Газар зүй) Монгол орны хамгийн өмнөд захын цэг (х.ө 41°35′, з.у 105°00′) аль нь вэ?</strong>
+          <div class="quiz-options">
+            <label class="option-label"><input type="radio" name="q3" value="a" onchange="saveQuiz('q3', this.value)"> Монгол шарын даваа</label>
+            <label class="option-label"><input type="radio" name="q3" value="b" onchange="saveQuiz('q3', this.value)"> Орвог гашууны бор толгой</label>
+            <label class="option-label"><input type="radio" name="q3" value="c" onchange="saveQuiz('q3', this.value)"> Модтой хамар</label>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn--primary" onclick="checkLevel1()">Хариултыг шалгах</button>
+        <div id="fb-level1" class="feedback-banner" role="status" aria-live="polite"></div>
+      </article>
+
+      <!-- LEVEL 2: UNDERSTANDING -->
+      <article class="figure-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+          <span class="bloom-tag">Түвшин 2 · Ойлгох</span>
+          <span class="bloom-tag tag-history">Түүх 70% · Газар зүй 30%</span>
+        </div>
+        <h3 class="sub-heading">Даалгавар 2А ба 2Б: Өөрчлөлтийн шалтгааныг тайлбарлах</h3>
+
+        <div class="quiz-question">
+          <div class="field-group" style="margin-bottom: var(--space-md);">
+            <label class="field-label" for="u1">А. 1931 онд хуучин хошууны тогтолцоог халсан гол зорилго юу байсан бэ?</label>
+            <select class="select-input" id="u1" onchange="saveUnderstanding('u1', this.value)">
+              <option value="">-- Сонгоно уу --</option>
+              <option value="econ">Эдийн засаг, газар зүйн бүсчлэлд тулгуурлан ард түмэнд үйлчлэх захиргааг ойртуулах</option>
+              <option value="feudal">Ноёдын угсаа залгамжлах эрхийг дахин сэргээж бататгах</option>
+              <option value="coast">Далайн боомт руу гарах худалдааны суваг нээх</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="u2">Б. 1923 онд аймгийн нэрийг уул, усны нэрээр сольсон нь ямар утгатай байсан бэ?</label>
+            <select class="select-input" id="u2" onchange="saveUnderstanding('u2', this.value)">
+              <option value="">-- Сонгоно уу --</option>
+              <option value="geo_symbol">Феодалын хэргэм цолны нэршлийг халж, эх орны газар зүйн онцлогоор нэрлэх</option>
+              <option value="military">Зөвхөн цэргийн ангиудын дугаарыг тэмдэглэх</option>
+              <option value="climate">Хур тунадасны хэмжээгээр бүсчлэх</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn--secondary" onclick="checkLevel2()">Сонголтыг шалгах</button>
+        <div id="fb-level2" class="feedback-banner" role="status" aria-live="polite"></div>
+
+        <div class="field-group" style="margin-top: var(--space-md);">
+          <label class="field-label" for="u3-text">Даалгавар 2Б (Богино эргэцүүлэл — Газар зүй ба Засаг захиргаа):</label>
+          <span class="field-hint">Монгол орон өргөргийн дагуу 2392 км сунаж тогтсон бөгөөд нутгийн 80% нь д.т.д. 1000 м-ээс өндөр оршдог нь аймаг, сумдын хил, зам харилцаанд хэрхэн нөлөөлдгийг 2–3 өгүүлбэрээр бичнэ үү.</span>
+          <textarea class="textarea-input" id="u3-text" placeholder="Таны тайлбар..." oninput="saveUnderstanding('u3', this.value)"></textarea>
+        </div>
+      </article>
+    </div>
+
+    <!-- LEVEL 3: APPLICATION (INTERACTIVE VECTOR MAP LAB) -->
+    <article class="figure-card" style="margin-top: var(--space-lg);">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+        <div>
+          <span class="bloom-tag">Түвшин 3 · Хэрэглэх (Орон зайн зураглал)</span>
+          <h3 class="sub-heading" style="margin-top: var(--space-xs);">Даалгавар 3: Монгол орны түүх-газар зүйн интерактив схем зураг</h3>
+        </div>
+        <span class="bloom-tag tag-geo">Байрлал ба Түүхэн угсаа</span>
+      </div>
+      <p class="section-deck">Давхаргын товчлуур дээр дарж түүхэн болон газар зүйн мэдээллийг харьцуулан, зураг дээрх бүс нутаг бүрийг дарж судална уу. Дараа нь баруун талын хэрэглээний даалгаврыг гүйцэтгэнэ үү.</p>
+
+      <div class="map-layer-controls" role="group" aria-label="Газрын зургийн давхарга сонгох">
+        <button type="button" class="layer-btn is-active" id="btn-layer-manchu" onclick="setMapLayer('manchu')">1. XVII–1923 (4 аймаг ба Ховд)</button>
+        <button type="button" class="layer-btn" id="btn-layer-1923" onclick="setMapLayer('1923')">2. 1923 он (Уул усны 5 аймаг)</button>
+        <button type="button" class="layer-btn" id="btn-layer-modern" onclick="setMapLayer('modern')">3. Өнөө үе (21 аймаг ба Бүсүүд)</button>
+        <button type="button" class="layer-btn" id="btn-layer-geo" onclick="setMapLayer('geo')">4. Газар зүй (4 захын цэг ба Бүс)</button>
+      </div>
+
+      <div class="map-lab">
+        <div class="svg-map-wrap">
+          <svg id="mongolia-svg" class="map-svg" viewBox="0 0 800 440" role="img" aria-label="Монгол орны түүх-газар зүйн схем газрын зураг">
+            <!-- Gridlines (Latitude/Longitude schematic) -->
+            <g stroke="var(--outline-variant)" stroke-width="0.8" stroke-dasharray="4 4">
+              <line x1="60" y1="80" x2="740" y2="80"/>
+              <line x1="60" y1="200" x2="740" y2="200"/>
+              <line x1="60" y1="320" x2="740" y2="320"/>
+              <line x1="180" y1="35" x2="180" y2="405"/>
+              <line x1="390" y1="35" x2="390" y2="405"/>
+              <line x1="600" y1="35" x2="600" y2="405"/>
+            </g>
+            <text x="64" y="75" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">50° х.ө</text>
+            <text x="64" y="195" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">46° х.ө</text>
+            <text x="64" y="315" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">42° х.ө</text>
+
+            <!-- Schematic Administrative Regions inside Mongolia Silhouette -->
+            <!-- West: Khovd Frontier / Chandmani Uul / West Region -->
+            <path id="reg-west" class="map-region is-selected" onclick="selectRegion('west')"
+              d="M 85,120 L 145,75 L 210,115 L 235,190 L 200,265 L 150,270 L 95,215 L 70,165 Z"
+              fill="var(--map-land)" stroke="var(--secondary)" stroke-width="1.5"/>
+
+            <!-- West-Center: Zasagt Khan / Khantaishir / West-Khangai -->
+            <path id="reg-zasagt" class="map-region" onclick="selectRegion('zasagt')"
+              d="M 210,115 L 285,95 L 330,150 L 340,255 L 295,335 L 220,305 L 200,265 L 235,190 Z"
+              fill="var(--map-land)" stroke="var(--secondary)" stroke-width="1.5"/>
+
+            <!-- Center-West: Sain Noyon Khan / Tsetserleg Mandal / Khangai -->
+            <path id="reg-sainnoyon" class="map-region" onclick="selectRegion('sainnoyon')"
+              d="M 285,95 L 355,60 L 420,105 L 435,235 L 395,360 L 295,335 L 340,255 L 330,150 Z"
+              fill="var(--map-land)" stroke="var(--secondary)" stroke-width="1.5"/>
+
+            <!-- Center-East: Tusheet Khan / Bogd Khan Uul / Central -->
+            <path id="reg-tusheet" class="map-region" onclick="selectRegion('tusheet')"
+              d="M 420,105 L 515,115 L 555,215 L 535,345 L 445,385 L 395,360 L 435,235 Z"
+              fill="var(--map-land)" stroke="var(--secondary)" stroke-width="1.5"/>
+
+            <!-- East: Setsen Khan / Khan Khentii Uul / Eastern Steppe -->
+            <path id="reg-setsen" class="map-region" onclick="selectRegion('setsen')"
+              d="M 515,115 L 620,135 L 735,180 L 690,265 L 615,310 L 535,345 L 555,215 Z"
+              fill="var(--map-land)" stroke="var(--secondary)" stroke-width="1.5"/>
+
+            <!-- Geographic Overlay Elements (Mountain ranges & Extreme Points) -->
+            <g id="geo-overlay" opacity="0.9">
+              <!-- Mountain schematic symbols -->
+              <polyline points="105,155 120,138 135,155 150,140 165,158" fill="none" stroke="var(--tertiary)" stroke-width="1.8"/>
+              <text x="108" y="172" font-family="var(--font-body)" font-size="11" font-weight="600" fill="var(--tertiary)">Монгол Алтай</text>
+
+              <polyline points="300,175 315,158 330,175 345,160 360,177" fill="none" stroke="var(--tertiary)" stroke-width="1.8"/>
+              <text x="305" y="192" font-family="var(--font-body)" font-size="11" font-weight="600" fill="var(--tertiary)">Хангай</text>
+
+              <polyline points="470,145 485,128 500,145" fill="none" stroke="var(--tertiary)" stroke-width="1.8"/>
+              <text x="455" y="160" font-family="var(--font-body)" font-size="11" font-weight="600" fill="var(--tertiary)">Хэнтий</text>
+
+              <text x="605" y="210" font-family="var(--font-body)" font-size="11" font-weight="600" fill="var(--positive)">Дорнод тал</text>
+              <text x="370" y="325" font-family="var(--font-body)" font-size="11" font-weight="600" fill="var(--data-4)">Их Говь</text>
+
+              <!-- 4 Extreme Points from 08_gazar_zui.pdf -->
+              <circle cx="355" cy="58" r="5" fill="var(--data-4)" stroke="var(--surface-container-low)" stroke-width="1.5"/>
+              <text x="364" y="55" font-family="var(--font-label)" font-size="10" font-weight="600" fill="var(--on-surface)">Хойд: Монгол шарын даваа (52°09′)</text>
+
+              <circle cx="445" cy="386" r="5" fill="var(--data-4)" stroke="var(--surface-container-low)" stroke-width="1.5"/>
+              <text x="454" y="395" font-family="var(--font-label)" font-size="10" font-weight="600" fill="var(--on-surface)">Өмнөд: Орвог гашууны бор толгой (41°35′)</text>
+
+              <circle cx="70" cy="165" r="5" fill="var(--data-4)" stroke="var(--surface-container-low)" stroke-width="1.5"/>
+              <text x="64" y="248" font-family="var(--font-label)" font-size="10" font-weight="600" fill="var(--on-surface)">Баруун: Мааньт уул (87°44′)</text>
+
+              <circle cx="735" cy="180" r="5" fill="var(--data-4)" stroke="var(--surface-container-low)" stroke-width="1.5"/>
+              <text x="580" y="122" font-family="var(--font-label)" font-size="10" font-weight="600" fill="var(--on-surface)">Зүүн: Модтой хамар (119°56′)</text>
+            </g>
+
+            <!-- Dynamic Region Labels -->
+            <text id="lbl-west" x="148" y="195" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--on-surface)">Ховдын хязгаар</text>
+            <text id="lbl-zasagt" x="270" y="235" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--on-surface)">Засагт хан</text>
+            <text id="lbl-sainnoyon" x="368" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--on-surface)">Сайн ноён хан</text>
+            <text id="lbl-tusheet" x="478" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--on-surface)">Түшээт хан</text>
+            <text id="lbl-setsen" x="605" y="240" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--on-surface)">Сэцэн хан</text>
+
+            <!-- Capital Marker -->
+            <rect x="467" y="182" width="10" height="10" fill="var(--primary-container)" stroke="var(--outline)" stroke-width="1.5"/>
+            <text x="482" y="191" font-family="var(--font-body)" font-size="11" font-weight="700" fill="var(--on-surface)">Нийслэл</text>
+          </svg>
+          <p class="kpi-caption" style="margin-top: var(--space-sm);">Зураг дээрх аль ч бүс нутгийг дарж түүхэн шилжилт болон газар зүйн өгөгдлийг шалгана уу. Хэмжээс: өргөргийн зөрүү 10°34′, уртрагийн зөрүү 32°12′.</p>
+        </div>
+
+        <div style="display:grid; gap:var(--space-md);">
+          <div class="aside-box" id="region-inspector" style="border-radius: var(--rounded-lg);">
+            <span class="dossier-meta">СОНГОСОН БҮС НУТГИЙН МЭДЭЭЛЭЛ</span>
+            <h4 class="sub-heading" id="insp-title" style="margin-top: var(--space-xs);">Ховдын хязгаар / Баруун бүс</h4>
+            <p id="insp-history" style="margin: 0 0 var(--space-sm) 0;"><strong>Түүхэн угсаа (70%):</strong> Манжийн үеийн Ховдын хязгаар, Дөрвөдийн 2 аймаг → 1925–1930 онд Чандмань уулын аймаг → Одоогийн Баян-Өлгий, Увс, Ховд аймаг.</p>
+            <p id="insp-geo" style="margin: 0;"><strong>Газар зүйн онцлог (30%):</strong> Монгол Алтайн өндөр уулс (Хүйтэн оргил 4374 м, мөнх цас, мөсөн гол), Их нууруудын хотгор, Төв Азийн гадагш урсгалгүй дотоодын ай сав.</p>
+          </div>
+
+          <div class="quiz-question" style="margin-bottom:0;">
+            <strong>Даалгавар 3А (Хэрэглэх дасгал):</strong> Дээрх интерактив зургийг ашиглан дараах аймгуудын түүхэн гарал ба газар зүйн бүсийг зөв тодорхойлно уу.
+            <div class="field-group" style="margin-top: var(--space-sm);">
+              <label class="field-label" for="app1">1) Архангай, Өвөрхангай, Баянхонгор аймгууд 1923 онд аль аймагт багтаж байсан бэ?</label>
+              <select class="select-input" id="app1" onchange="saveAppTask('app1', this.value)">
+                <option value="">-- Сонгох --</option>
+                <option value="tsetserleg">Цэцэрлэг Мандал уулын аймаг (хуучин Сайн ноён хан)</option>
+                <option value="khentii">Хан Хэнтий уулын аймаг (хуучин Сэцэн хан)</option>
+                <option value="chandmani">Чандмань уулын аймаг (хуучин Ховдын хязгаар)</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin-top: var(--space-sm);">
+              <label class="field-label" for="app2">2) Хамгийн нам цэг Хөх нуур (д.т.д. 560 м) ба Дорнод Монголын тал нь түүхэн аль аймгийн нутагт хамаардаг вэ?</label>
+              <select class="select-input" id="app2" onchange="saveAppTask('app2', this.value)">
+                <option value="">-- Сонгох --</option>
+                <option value="zasagt">Засагт хан аймаг</option>
+                <option value="setsen">Сэцэн хан аймаг (Хан Хэнтий уулын аймаг)</option>
+                <option value="tusheet">Түшээт хан аймаг</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn--primary" style="margin-top: var(--space-md);" onclick="checkLevel3()">Хэрэглээг шалгах</button>
+            <div id="fb-level3" class="feedback-banner" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 04. BLOOM'S LEVELS 4–5: ANALYSIS (COMPARATIVE TABLES) & EVALUATION -->
+  <section id="sec-bloom-4-5" aria-label="Блумын таксономи: Задлан шинжлэх ба Үнэлэх түвшин">
+    <div class="dossier-bar">
+      <div class="dossier-bar-left">
+        <span class="dossier-pill">04 · БЛУМЫН ТАКСОНОМИ (ТҮВШИН 4–5)</span>
+        <span class="dossier-meta">ХАРЬЦУУЛСАН ХҮСНЭГТ · БАРИМТАД ҮНЭЛГЭЭ</span>
+      </div>
+      <span class="dossier-meta">ЗАДЛАН ШИНЖЛЭХ · ҮНЭЛЭХ</span>
+    </div>
+
+    <!-- LEVEL 4: COMPARATIVE TABLE 1 (HISTORY 70%) -->
+    <article class="figure-card">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+        <div>
+          <span class="bloom-tag">Түвшин 4 · Задлан шинжлэх</span>
+          <h3 class="sub-heading" style="margin-top: var(--space-xs);">Харьцуулсан хүснэгт 1: Түүхэн үе шатуудын засаг захиргааны тогтолцоо (Түүх 70%)</h3>
+        </div>
+        <span class="bloom-tag tag-history">Хоосон нүднүүдийг нөхөж шалгана уу</span>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Түүхэн үе шат</th>
+              <th>Засаг захиргааны шатлал</th>
+              <th>Томоохон нэгжийн тоо</th>
+              <th>Нэршил ба удирдлагын гол зарчим</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Их Монгол Улс</strong><br><span class="dossier-meta">XIII–XIV зуун</span></td>
+              <td>Түмэн → Мянгат → Зуут → Аравт</td>
+              <td class="num-cell">3 түмэн, 95 мянгат</td>
+              <td>Цэрэг, засаг захиргааны нэгдмэл бүтэц; Их Засаг хуулиар зохицуулагдсан.</td>
+            </tr>
+            <tr>
+              <td><strong>2. Манж Чин улсын үе</strong><br><span class="dossier-meta">1691–1911 он</span></td>
+              <td>Аймаг → Хошуу → Сум → Баг</td>
+              <td>
+                <label class="field-hint" for="tbl-h1" style="display:block; margin-bottom:4px;">Халхын хэдэн аймаг?</label>
+                <select class="select-input" id="tbl-h1" onchange="saveTableField('h1', this.value)">
+                  <option value="">-- Сонгох --</option>
+                  <option value="4">Халхын 4 аймаг (+ Ховд, Хөвсгөл хязгаар)</option>
+                  <option value="13">13 аймаг</option>
+                  <option value="21">21 аймаг</option>
+                </select>
+              </td>
+              <td>Засаг ноёдын угсаа залгамжилсан эзэмшил; хил дээр харуул, өртөөгөөр хязгаарласан.</td>
+            </tr>
+            <tr>
+              <td><strong>3. 1923 оны шинэчлэл</strong><br><span class="dossier-meta">1923–1930 он</span></td>
+              <td>Аймаг → Хошуу → Сум → Арван гэр</td>
+              <td class="num-cell">5 аймаг (+ Алтайн хязгаар)</td>
+              <td>
+                <label class="field-hint" for="tbl-h2" style="display:block; margin-bottom:4px;">Нэршлийн өөрчлөлтийн зарчим:</label>
+                <select class="select-input" id="tbl-h2" onchange="saveTableField('h2', this.value)">
+                  <option value="">-- Сонгох --</option>
+                  <option value="nature">Уул, усны газар зүйн нэрээр сольсон</option>
+                  <option value="numbers">Тоон дугаараар нэрлэсэн</option>
+                  <option value="nobles">Хан, ноёдын цолоор хэвээр үлдээсэн</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>4. БНМАУ-ын шинэчлэл</strong><br><span class="dossier-meta">1931–1991 он</span></td>
+              <td>
+                <label class="field-hint" for="tbl-h3" style="display:block; margin-bottom:4px;">Аль нэгжийг халсан бэ?</label>
+                <select class="select-input" id="tbl-h3" onchange="saveTableField('h3', this.value)">
+                  <option value="">-- Сонгох --</option>
+                  <option value="aimag_sum">Хошууг халж: Аймаг → Сум → Баг/Бригад</option>
+                  <option value="tumen">Мянгатыг халж: Хошуу → Отог</option>
+                </select>
+              </td>
+              <td class="num-cell">13 аймаг (1931) → 18 аймаг, 3 хот</td>
+              <td>Эдийн засаг, газар зүйн бүсчлэлд тулгуурлан жижиг хошуудыг нэгтгэж томруулсан.</td>
+            </tr>
+            <tr>
+              <td><strong>5. Ардчилсан Монгол Улс</strong><br><span class="dossier-meta">1992–Өнөө үе</span></td>
+              <td>Аймаг/Нийслэл → Сум/Дүүрэг → Баг/Хороо</td>
+              <td>
+                <label class="field-hint" for="tbl-h4" style="display:block; margin-bottom:4px;">Үндсэн хуульт нэгжийн тоо:</label>
+                <select class="select-input" id="tbl-h4" onchange="saveTableField('h4', this.value)">
+                  <option value="">-- Сонгох --</option>
+                  <option value="21">21 аймаг, 330 сум, нийслэл (9 дүүрэг)</option>
+                  <option value="18">18 аймаг, 250 сум</option>
+                </select>
+              </td>
+              <td>1992 оны Үндсэн хуулийн 57-р зүйл: Нутгийн өөрөө удирдах ёсыг төрийн удирдлагатай хослуулсан.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: var(--space-md); display:flex; flex-wrap:wrap; gap:var(--space-sm); align-items:center;">
+        <button type="button" class="btn btn--primary" onclick="checkTable1()">Хүснэгт 1-ийг шалгах</button>
+        <div id="fb-table1" class="feedback-banner" style="margin-top:0; flex:1;" role="status" aria-live="polite"></div>
+      </div>
+    </article>
+
+    <!-- LEVEL 4: COMPARATIVE TABLE 2 (GEOGRAPHY 30%) -->
+    <article class="figure-card" style="margin-top: var(--space-lg);">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+        <div>
+          <span class="bloom-tag">Түвшин 4 · Задлан шинжлэх</span>
+          <h3 class="sub-heading" style="margin-top: var(--space-xs);">Харьцуулсан хүснэгт 2: Байгалийн бүс, гадарга ба засаг захиргааны уялдаа (Газар зүй 30%)</h3>
+        </div>
+        <span class="bloom-tag tag-geo">«Газар зүй VIII» өгөгдөл</span>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Бүс / Жишиг нутаг</th>
+              <th>Гадаргын өндөр, уур амьсгал</th>
+              <th>Ус зүй ба Хүн амын нягтаршил</th>
+              <th>Засаг захиргаа ба аж ахуйн шинжилгээ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ойт хээр / Хойд уулс</strong><br><span class="dossier-meta">Жишээ: Хөвсгөл (Мөрөн), Сэлэнгэ</span></td>
+              <td>Харьцангуй чийглэг, дулааны улиралд хур тунадас ахиу; Сэлэнгэ орчимд газар тариаланд таатай.</td>
+              <td>Хойд мөсөн далайн ай савын гол мөрөн элбэг (Сэлэнгэ, Орхон, Идэр); хүн ам шигүү.</td>
+              <td>
+                <label class="field-hint" for="tbl-g1" style="display:block; margin-bottom:4px;">Сумын нутаг ба аж ахуйн хэв шинж:</label>
+                <select class="select-input" id="tbl-g1" onchange="saveTableField('g1', this.value)">
+                  <option value="">-- Сонгох --</option>
+                  <option value="dense">Нутаг дэвсгэр харьцангуй бага, сум олон, газар тариалан ба эрчимжсэн мал аж ахуй хосолсон</option>
+                  <option value="sparse">Нутаг маш том, гадаргын ус огт байхгүй, зөвхөн тэмээн аж ахуйтай</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Хээр / Дорнод тал</strong><br><span class="dossier-meta">Жишээ: Дорнод, Хэнтий, Сүхбаатар</span></td>
+              <td>д.т.д. 1000–1500 м тэгш тал, цав толгод (Хөх нуур д.т.д. 560 м — хамгийн нам цэг).</td>
+              <td>Номхон далайн ай сав (Хэрлэн, Онон, Халх гол); Хэрлэн голын эх 2393 м, адаг 539 м.</td>
+              <td>Уудам бэлчээр дагасан мал аж ахуй; сумын төв хоорондын зай хол, зам харилцаа чухал.</td>
+            </tr>
+            <tr>
+              <td><strong>Говь, Цөл / Өмнөд</strong><br><span class="dossier-meta">Жишээ: Өмнөговь (Даланзадгад), Баянхонгор (Эхийн гол)</span></td>
+              <td>Хуурай, дулаан (Эхийн голд жилд 36 мм тунадас); Өмнөговьд 1935–2015 онд хүн ам 33.9 мянгаас 60.5 мянга болсон.</td>
+              <td>Төв Азийн гадагш урсгалгүй дотоодын ай сав; гадаргын ус ховор, хүн ам сийрэг.</td>
+              <td>
+                <label class="field-hint" for="tbl-g2" style="display:block; margin-bottom:4px;">Сумын нутгийн хэмжээний онцлог:</label>
+                <select class="select-input" id="tbl-g2" onchange="saveTableField('g2', this.value)">
+                  <option value="">-- Сонгох --</option>
+                  <option value="large">Нэг сумын нутаг дэвсгэр маш өргөн уудам (бэлчээр, усны нөөц сийрэг тул), уул уурхай, говийн мал аж ахуйтай</option>
+                  <option value="small">Сум бүр хэдхэн км² жижиг талбайтай, өндөр уулын мөсөн голоор тэжээгддэг</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: var(--space-md); display:flex; flex-wrap:wrap; gap:var(--space-sm); align-items:center;">
+        <button type="button" class="btn btn--secondary" onclick="checkTable2()">Хүснэгт 2-ыг шалгах</button>
+        <div id="fb-table2" class="feedback-banner" style="margin-top:0; flex:1;" role="status" aria-live="polite"></div>
+      </div>
+    </article>
+
+    <!-- LEVEL 5: EVALUATION -->
+    <article class="figure-card" style="margin-top: var(--space-lg);">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+        <div>
+          <span class="bloom-tag">Түвшин 5 · Үнэлэх (Шүүмжлэлт эргэцүүлэл)</span>
+          <h3 class="sub-heading" style="margin-top: var(--space-xs);">Даалгавар 5: 1931 оны шинэчлэл ба Өнөөгийн 21 аймгийн тогтолцоог үнэлэх</h3>
+        </div>
+        <span class="bloom-tag tag-history">Баримтад суурилсан дүгнэлт</span>
+      </div>
+      <p class="section-deck">Монгол Улсын хүн ам 1918 онд 647 мянга байсан бол 2015 онд 3 сая давж, Улаанбаатарт ихээхэн төвлөрч, харин зарим алслагдсан сумдын хүн ам цөөрсөн. Дараах асуудалд өөрийн үнэлэлтийг өгнө үү.</p>
+
+      <div class="task-grid">
+        <div class="quiz-question" style="margin-bottom:0;">
+          <div class="field-group">
+            <label class="field-label" for="eval-stance">1. Өнөөгийн 21 аймаг, 330 сумын засаг захиргааны хуваарийн талаарх таны байр суурь:</label>
+            <select class="select-input" id="eval-stance" onchange="saveEval('stance', this.value)">
+              <option value="">-- Байр сууриа сонгох --</option>
+              <option value="keep">Одоогийн 21 аймаг, 330 сумыг хэвээр хадгалж, цахим үйлчилгээг сайжруулах</option>
+              <option value="cluster">Аймгуудын тоог хэвээр үлдээж, эдийн засаг-дэд бүтцийн бүсийн хамтын ажиллагааг хүчтэй болгох</option>
+              <option value="merge">Хүн ам цөөрсөн зарим жижиг сумыг газар зүйн бүс, сав газраар нэгтгэж томруулах</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin-top: var(--space-md);">
+            <span class="field-label">2. Үнэлгээндээ харгалзах гол шалгууруудыг сонгоно уу (олон сонголттой):</span>
+            <div class="quiz-options">
+              <label class="option-label"><input type="checkbox" id="crit-hist" onchange="saveEvalCrit('hist', this.checked)"> Түүхэн нутаг дэвсгэрийн уламжлал ба нутгийн иргэдийн соёлын ой санамж (Түүх)</label>
+              <label class="option-label"><input type="checkbox" id="crit-geo" onchange="saveEvalCrit('geo', this.checked)"> Газрын гадарга, голын сав газар, хүн амын суурьшил ба зам харилцаа (Газар зүй)</label>
+              <label class="option-label"><input type="checkbox" id="crit-svc" onchange="saveEvalCrit('svc', this.checked)"> Эмнэлэг, сургууль зэрэг төрийн үйлчилгээний хүртээмж ба төсвийн үр ашиг</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="eval-reason">3. Баримтад суурилсан үндэслэл бичих (1931 оны шинэчлэлийн давуу/сул талтай харьцуулан дүгнэнэ үү):</label>
+          <span class="field-hint">Жишээ нь: 1931 онд хошууг татан буулгаж, бүсчлэлээр хуваасан нь удирдлагыг ойртуулсан ч уламжлалт нэршил, нутгийн заагийг өөрчилсөн. Өнөөдөр бид...</span>
+          <textarea class="textarea-input" id="eval-reason" style="min-height: 185px;" placeholder="Таны шүүмжлэлт үнэлгээ, баримт..." oninput="saveEval('reason', this.value)"></textarea>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 05. BLOOM'S LEVEL 6: MIND MAP FRAMEWORK & REAL-WORLD CREATIVE PROBLEM SOLVING -->
+  <section id="sec-bloom-6" aria-label="Блумын таксономи: Бүтээх түвшин — Оюуны зураглал ба Бодит төсөл">
+    <div class="dossier-bar">
+      <div class="dossier-bar-left">
+        <span class="dossier-pill">05 · БЛУМЫН ТАКСОНОМИ (ТҮВШИН 6 · БҮТЭЭХ)</span>
+        <span class="dossier-meta">ОЮУНЫ ЗУРАГЛАЛЫН БҮТЭЦ · БОДИТ АСУУДАЛ ШИЙДВЭРЛЭХ</span>
+      </div>
+      <span class="dossier-meta">ТҮҮХ 70% + ГАЗАР ЗҮЙ 30% НЭГТГЭЛ</span>
+    </div>
+
+    <!-- MIND MAP FRAMEWORK -->
+    <article class="figure-card">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+        <div>
+          <span class="bloom-tag">Бүтээх хэсэг А · Интерактив Оюуны зураглал</span>
+          <h3 class="sub-heading" style="margin-top: var(--space-xs);">«Засаг захиргаа ба Орон зай» оюуны зураглалын бүтэц</h3>
+        </div>
+        <span class="dossier-meta">МӨЧИР ДЭЭР ДАРЖ ЭСВЭЛ ШИНЭ ЗАНГИЛАА НЭМНЭ ҮҮ</span>
+      </div>
+
+      <div class="mindmap-grid">
+        <div class="mindmap-canvas">
+          <svg id="mindmap-svg" viewBox="0 0 680 390" style="width:100%; height:auto; display:block;" role="img" aria-label="Засаг захиргааны хувьслын оюуны зураглал">
+            <!-- Connector Curves -->
+            <path d="M 340,195 C 260,195 230,85 150,75" fill="none" stroke="var(--data-1)" stroke-width="2.5"/>
+            <path d="M 340,195 C 250,195 230,155 150,150" fill="none" stroke="var(--data-1)" stroke-width="2.5"/>
+            <path d="M 340,195 C 250,195 230,235 150,230" fill="none" stroke="var(--data-1)" stroke-width="2.5"/>
+            <path d="M 340,195 C 260,195 230,315 150,310" fill="none" stroke="var(--data-1)" stroke-width="2.5"/>
+
+            <path d="M 340,195 C 420,195 450,105 530,100" fill="none" stroke="var(--data-3)" stroke-width="2.5"/>
+            <path d="M 340,195 C 420,195 450,195 530,195" fill="none" stroke="var(--data-3)" stroke-width="2.5"/>
+            <path d="M 340,195 C 420,195 450,295 530,295" fill="none" stroke="var(--data-3)" stroke-width="2.5"/>
+
+            <!-- Central Hub -->
+            <rect x="245" y="160" width="190" height="70" rx="6" fill="var(--primary)" stroke="var(--outline)" stroke-width="2"/>
+            <text x="340" y="188" text-anchor="middle" font-family="var(--font-headline)" font-size="13" font-weight="700" fill="var(--on-primary)">ЗАСАГ ЗАХИРГААНЫ</text>
+            <text x="340" y="207" text-anchor="middle" font-family="var(--font-headline)" font-size="13" font-weight="700" fill="var(--primary-container)">ХУВЬСАЛ (70/30)</text>
+
+            <!-- History Trunk Nodes (Left - 70%) -->
+            <g class="mindmap-node" onclick="focusMindBranch('hist1')">
+              <rect x="20" y="50" width="170" height="48" rx="4" fill="var(--secondary-tint)" stroke="var(--data-1)" stroke-width="1.5"/>
+              <text x="105" y="71" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--secondary)">1. Мянгатын систем</text>
+              <text x="105" y="88" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">1206 · Гурван түмэн</text>
+            </g>
+
+            <g class="mindmap-node" onclick="focusMindBranch('hist2')">
+              <rect x="20" y="126" width="170" height="48" rx="4" fill="var(--secondary-tint)" stroke="var(--data-1)" stroke-width="1.5"/>
+              <text x="105" y="147" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--secondary)">2. Манжийн 4 аймаг</text>
+              <text x="105" y="164" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">1691–1911 · Хошуу, сум</text>
+            </g>
+
+            <g class="mindmap-node" onclick="focusMindBranch('hist3')">
+              <rect x="20" y="206" width="170" height="48" rx="4" fill="var(--secondary-tint)" stroke="var(--data-1)" stroke-width="1.5"/>
+              <text x="105" y="227" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--secondary)">3. 1923 &amp; 1931 шинэчлэл</text>
+              <text x="105" y="244" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Уул ус нэр · 13 аймаг</text>
+            </g>
+
+            <g class="mindmap-node" onclick="focusMindBranch('hist4')">
+              <rect x="20" y="286" width="170" height="48" rx="4" fill="var(--secondary-tint)" stroke="var(--data-1)" stroke-width="1.5"/>
+              <text x="105" y="307" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--secondary)">4. 1992 Үндсэн хууль</text>
+              <text x="105" y="324" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">21 аймаг · 330 сум</text>
+            </g>
+
+            <!-- Geography Trunk Nodes (Right - 30%) -->
+            <g class="mindmap-node" onclick="focusMindBranch('geo1')">
+              <rect x="490" y="75" width="170" height="50" rx="4" fill="var(--positive-bg)" stroke="var(--data-3)" stroke-width="1.5"/>
+              <text x="575" y="96" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--positive)">Байрлал ба Гадарга</text>
+              <text x="575" y="113" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">4 цэг · д.т.д. 1580 м</text>
+            </g>
+
+            <g class="mindmap-node" onclick="focusMindBranch('geo2')">
+              <rect x="490" y="170" width="170" height="50" rx="4" fill="var(--positive-bg)" stroke="var(--data-3)" stroke-width="1.5"/>
+              <text x="575" y="191" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--positive)">Уур амьсгал ба Ус</text>
+              <text x="575" y="208" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">29 сав газар · 4 бүс</text>
+            </g>
+
+            <g class="mindmap-node" onclick="focusMindBranch('geo3')">
+              <rect x="490" y="270" width="170" height="50" rx="4" fill="var(--positive-bg)" stroke="var(--data-3)" stroke-width="1.5"/>
+              <text x="575" y="291" text-anchor="middle" font-family="var(--font-body)" font-size="12" font-weight="700" fill="var(--positive)">Хүн амын суурьшил</text>
+              <text x="575" y="308" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">647 мянга → 3 сая+</text>
+            </g>
+          </svg>
+
+          <div id="mindmap-detail" class="aside-box" style="margin-top: var(--space-sm); border-radius: var(--rounded); padding: var(--space-sm) var(--space-md);">
+            <strong>Сонгосон мөчрийн тайлбар:</strong> Оюуны зураглал дээрх дурын мөчрийг дарж түүхэн ба газар зүйн холбоосыг харна уу.
+          </div>
+        </div>
+
+        <div class="aside-box" style="border-radius: var(--rounded-lg);">
+          <h4 class="sub-heading">Өөрийн зангилааг нэмж бүтээх</h4>
+          <p class="field-hint" style="margin: 0 0 var(--space-md) 0;">Та энэ оюуны зураглалд өөрийн судалсан баримт, сум аймгийн жишээ эсвэл холбоосыг нэмж баяжуулна уу.</p>
+
+          <div class="field-group" style="margin-bottom: var(--space-sm);">
+            <label class="field-label" for="mm-branch">Аль салбарт хамаарах вэ?</label>
+            <select class="select-input" id="mm-branch">
+              <option value="Түүх (70%) — Түүхэн хувьсал">Түүх (70%) — Түүхэн хувьсал</option>
+              <option value="Газар зүй (30%) — Байрлал, байгалийн бүс">Газар зүй (30%) — Байрлал, байгалийн бүс</option>
+              <option value="Холбоос — Миний аймаг/сум">Холбоос — Миний аймаг, сумын жишээ</option>
+            </select>
+          </div>
+
+          <div class="field-group" style="margin-bottom: var(--space-sm);">
+            <label class="field-label" for="mm-text">Шинэ зангилааны түлхүүр үг ба баримт</label>
+            <input class="text-input" id="mm-text" type="text" placeholder="Жишээ: Орхон аймаг — 1994 онд Эрдэнэт хотоос байгуулагдсан">
+          </div>
+
+          <button type="button" class="btn btn--accent" onclick="addMindMapNode()">
+            <i data-lucide="plus" aria-hidden="true"></i>
+            Зангилаа нэмэх
+          </button>
+
+          <div id="mm-message" class="field-hint" style="margin-top: var(--space-xs); color: var(--error);" role="status" aria-live="polite"></div>
+
+          <div style="margin-top: var(--space-md);">
+            <span class="field-label">Таны нэмсэн зангилаанууд:</span>
+            <div class="custom-nodes-list" id="mm-nodes-list">
+              <span class="field-hint">Одоогоор нэмсэн зангилаа байхгүй байна.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- REAL-WORLD CREATIVE PROBLEM SOLVING -->
+    <article class="figure-card" style="margin-top: var(--space-lg);">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-sm);">
+        <div>
+          <span class="bloom-tag">Бүтээх хэсэг Б · Бодит асуудал шийдвэрлэх</span>
+          <h3 class="sub-heading" style="margin-top: var(--space-xs);">Төслийн даалгавар: «Бүсчилсэн хөгжил ба Ирээдүйн засаг захиргаа 2040»</h3>
+        </div>
+        <span class="bloom-tag tag-geo">Бодит сорилт</span>
+      </div>
+      <p class="section-deck">Бодит асуудал: Хүн амын тал орчим нь Улаанбаатар хотод төвлөрч, харин хөдөөгийн олон сум хүн ам цөөрөх, сүүлийн 76 жилд температур +2.24°C-ээр дулаарч бэлчээр, усны нөөц багасах сорилттой тулгарч байна. Та Монгол Улсын бүсчилсэн хөгжлийн зөвлөхийн хувиар нэг бүсийг сонгон шинэ шийдэл боловсруулна уу.</p>
+
+      <div class="task-grid">
+        <div style="display:grid; gap:var(--space-md);">
+          <div class="field-group">
+            <label class="field-label" for="proj-region">1. Сонгосон бүс нутаг ба Засаг захиргааны цөм</label>
+            <select class="select-input" id="proj-region" onchange="saveProject('region', this.value)">
+              <option value="">-- Бүс сонгох --</option>
+              <option value="Баруун бүс (Баян-Өлгий, Увс, Ховд, Завхан, Говь-Алтай)">Баруун бүс (Алтай, Их нууруудын сав)</option>
+              <option value="Хангайн бүс (Архангай, Өвөрхангай, Баянхонгор, Булган, Хөвсгөл, Орхон)">Хангайн бүс (Орхон–Сэлэнгийн сав, Эрдэнэт)</option>
+              <option value="Төвийн бүс (Төв, Дархан-Уул, Сэлэнгэ, Дорноговь, Дундговь, Өмнөговь, Говьсүмбэр)">Төвийн ба Говийн бүс (Төмөр замын коридор)</option>
+              <option value="Зүүн бүс (Хэнтий, Дорнод, Сүхбаатар)">Зүүн бүс (Хэрлэн–Улзын сав, Дорнод тал)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="proj-history">2. Түүхэн уламжлалаас авах санаа (70% Түүх)</label>
+            <span class="field-hint">Жишээ нь: Манжийн үеийн өртөөний сүлжээ, 1931 оны эдийн засгийн бүсчлэл эсвэл Чингисийн аравт/мянгатын хамтын зохион байгуулалт.</span>
+            <textarea class="textarea-input" id="proj-history" placeholder="Түүхэн сургамж ба уламжлал..." oninput="saveProject('history', this.value)"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="proj-geo">3. Газар зүй, ус, уур амьсгалын шийдэл (30% Газар зүй)</label>
+            <span class="field-hint">Голын сав газар, өндөржилт, дулааралд дасан зохицсон ус хуримтлуулах ба төвлөрөл сааруулах дэд бүтцийн шийдэл.</span>
+            <textarea class="textarea-input" id="proj-geo" placeholder="Газар зүйн оновчтой шийдэл..." oninput="saveProject('geo', this.value)"></textarea>
+          </div>
+        </div>
+
+        <div class="aside-box" style="border-radius: var(--rounded-lg);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-sm);">
+            <span class="dossier-pill">ТӨСЛИЙН ХУРААНГУЙ КАРТ</span>
+            <span class="dossier-meta">ШУУД ШИНЭЧЛЭГДЭНЭ</span>
+          </div>
+          <div class="field-group" style="margin-bottom: var(--space-md);">
+            <label class="field-label" for="proj-title">Төслийн нэр</label>
+            <input class="text-input" id="proj-title" type="text" placeholder="Жишээ: Хэрлэнгийн савын ногоон кластер" oninput="saveProject('title', this.value)">
+          </div>
+          <div id="project-preview" class="figure-card figure-card--compact" style="min-height: 180px;">
+            <p class="field-hint" style="margin:0;">Зүүн талын талбаруудыг бөглөхөд таны бүтээлч төслийн хураангуй энд автоматаар хэлбэржинэ.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 06. STUDENT SELF-EVALUATION CHECKLIST -->
+  <section id="sec-self-eval" aria-label="Сурагчийн өөрийн үнэлгээний хуудас">
+    <div class="dossier-bar">
+      <div class="dossier-bar-left">
+        <span class="dossier-pill">06 · СУРАГЧИЙН ӨӨРИЙН ҮНЭЛГЭЭ</span>
+        <span class="dossier-meta">ЧАДВАРЫН ХЯНАЛТЫН ХУУДАС</span>
+      </div>
+      <span class="index-num" id="self-eval-score">Бэлэн байдал: 0 / 16 оноо (0%)</span>
+    </div>
+
+    <div class="figure-card">
+      <p class="section-deck">Ажлын хуудсаа гүйцэтгэсний дараа өөрийн эзэмшсэн мэдлэг, чадварыг шударгаар үнэлнэ үү.</p>
+      <div class="checklist-table" id="self-eval-list"></div>
+
+      <div class="field-group" style="margin-top: var(--space-md);">
+        <label class="field-label" for="self-reflect">Өнөөдрийн хичээлээс хамгийн чухал ойлгосон зүйл ба цаашид гүнзгийрүүлэх сэдэв:</label>
+        <textarea class="textarea-input" id="self-reflect" placeholder="Өөрийн дүгнэлтээ бичнэ үү..." oninput="saveSelfReflect(this.value)"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07. SEPARATE TEACHER 20-POINT RUBRIC & ANSWER KEY -->
+  <section id="sec-teacher" class="teacher-section" aria-label="Багшийн 20 онооны үнэлгээний рубрик ба хариултын түлхүүр">
+    <div class="figure-card">
+      <div class="dossier-bar">
+        <div class="dossier-bar-left">
+          <span class="dossier-pill">07 · БАГШИЙН ХЭСЭГ (ТУСДАА)</span>
+          <span class="dossier-meta">20 ОНООНЫ ҮНЭЛГЭЭНИЙ РУБРИК · ХАРИУЛТЫН ТҮЛХҮҮР</span>
+        </div>
+        <button type="button" class="btn btn--secondary no-print" id="toggle-teacher-btn" onclick="toggleTeacherPanel()">
+          <i data-lucide="lock-open" aria-hidden="true"></i>
+          <span id="teacher-btn-label">Багшийн рубрик ба түлхүүрийг нээх</span>
+        </button>
+      </div>
+
+      <p style="margin:0; color: var(--on-surface-variant);">Энэ хэсэг нь багшид зориулсан <strong>20 онооны албан ёсны рубрик (Түүх 14 оноо = 70%, Газар зүй 6 оноо = 30%)</strong>, шуурхай дүн тооцоолуур болон бүх даалгаврын хариултын түлхүүрийг агуулна. Сурагчид даалгавраа дууссаны дараа нээж шалгана уу.</p>
+
+      <div id="teacher-body" class="teacher-body">
+        <!-- 20-Point Rubric Table + Live Grading -->
+        <div>
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-sm); margin-bottom:var(--space-md);">
+            <h2 class="section-heading" style="margin:0;">20 онооны үнэлгээний рубрик (Түүх 70% · Газар зүй 30%)</h2>
+            <div class="dossier-pill" id="teacher-total-badge">Нийт оноо: 0 / 20 (Түүх 0/14 · Газар зүй 0/6)</div>
+          </div>
+
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Шалгуур үзүүлэлт (Блумын түвшин)</th>
+                  <th>Агуулгын жин (20 оноо)</th>
+                  <th>Маш сайн (4 оноо)</th>
+                  <th>Хангалттай (2–3 оноо)</th>
+                  <th>Сайжруулах (0–1 оноо)</th>
+                  <th>Багшийн оноо</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1. Мэдэх ба Ойлгох</strong><br><span class="dossier-meta">Түвшин 1–2 (Даалгавар 1, 2)</span></td>
+                  <td class="num-cell">Түүх: 3 оноо<br>Газар зүй: 1 оноо</td>
+                  <td>Түүхэн үе шат, нэршил, 4 захын цэгийг алдаагүй тодорхойлж, шалтгааныг оновчтой тайлбарласан.</td>
+                  <td>Гол он цаг ба захын цэгүүдийн ихэнхийг зөв нэрлэсэн ч тайлбар товч дутуу.</td>
+                  <td>Түүхэн нэршил ба газар зүйн өгөгдлийг хольж эндүүрсэн.</td>
+                  <td>
+                    <label class="field-hint" for="rubric-r1">Оноо (0–4)</label>
+                    <input class="text-input" id="rubric-r1" type="number" min="0" max="4" value="0" style="width:84px;" oninput="saveRubricScore('r1', this.value)">
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>2. Хэрэглэх ба Орон зай</strong><br><span class="dossier-meta">Түвшин 3 (Схем зураг 3А)</span></td>
+                  <td class="num-cell">Түүх: 2 оноо<br>Газар зүй: 2 оноо</td>
+                  <td>Хуучин 4 аймаг, 1923 оны нэршил, өнөөгийн 21 аймаг болон байгалийн бүсийг зураг дээр яг таг холбосон.</td>
+                  <td>Ихэнх аймгийн түүхэн гарал эсвэл байгалийн бүсийг зөв олсон ч зарим цэгийг алдсан.</td>
+                  <td>Газрын зургийн давхаргыг уншиж, бүсийг ангилж чадаагүй.</td>
+                  <td>
+                    <label class="field-hint" for="rubric-r2">Оноо (0–4)</label>
+                    <input class="text-input" id="rubric-r2" type="number" min="0" max="4" value="0" style="width:84px;" oninput="saveRubricScore('r2', this.value)">
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>3. Задлан шинжлэх</strong><br><span class="dossier-meta">Түвшин 4 (Хүснэгт 1, 2)</span></td>
+                  <td class="num-cell">Түүх: 3 оноо<br>Газар зүй: 1 оноо</td>
+                  <td>Түүхэн 5 үеийн шатлал ба байгалийн 3 бүсийн уялдааг харьцуулан бүрэн нөхөж шинжилсэн.</td>
+                  <td>Хүснэгтийн 4–5 нүдийг зөв бөглөсөн ч бүсийн ялгааг бүрэн гаргаагүй.</td>
+                  <td>Хүснэгтийн талыг нь бөглөөгүй эсвэл буруу харьцуулсан.</td>
+                  <td>
+                    <label class="field-hint" for="rubric-r3">Оноо (0–4)</label>
+                    <input class="text-input" id="rubric-r3" type="number" min="0" max="4" value="0" style="width:84px;" oninput="saveRubricScore('r3', this.value)">
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>4. Үнэлэх чадвар</strong><br><span class="dossier-meta">Түвшин 5 (Даалгавар 5)</span></td>
+                  <td class="num-cell">Түүх: 3 оноо<br>Газар зүй: 1 оноо</td>
+                  <td>1931 оны шинэчлэл болон өнөөгийн 21 аймгийн давуу, сул талыг түүх-газар зүйн баримтаар нотолсон.</td>
+                  <td>Байр сууриа илэрхийлсэн ч баримт, тоо баримтын нотолгоо сул.</td>
+                  <td>Шалгуур сонгосон боловч үндэслэл бичээгүй.</td>
+                  <td>
+                    <label class="field-hint" for="rubric-r4">Оноо (0–4)</label>
+                    <input class="text-input" id="rubric-r4" type="number" min="0" max="4" value="0" style="width:84px;" oninput="saveRubricScore('r4', this.value)">
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>5. Бүтээх ба Шийдэл</strong><br><span class="dossier-meta">Түвшин 6 (Оюуны зураглал, Төсөл)</span></td>
+                  <td class="num-cell">Түүх: 3 оноо<br>Газар зүй: 1 оноо</td>
+                  <td>Оюуны зураглалыг шинэ зангилаагаар баяжуулж, бодит асуудалд түүх-газар зүйн бодитой төсөл бүтээсэн.</td>
+                  <td>Оюуны зураглал эсвэл төслийн аль нэг хэсгийг ерөнхий байдлаар гүйцэтгэсэн.</td>
+                  <td>Бүтээлч санаа, шийдэл дутуу, зөвхөн хуулсан.</td>
+                  <td>
+                    <label class="field-hint" for="rubric-r5">Оноо (0–4)</label>
+                    <input class="text-input" id="rubric-r5" type="number" min="0" max="4" value="0" style="width:84px;" oninput="saveRubricScore('r5', this.value)">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="kpi-caption" style="margin-top: var(--space-sm);">Нийт жинлэлтийн баталгаажуулалт: Түүхийн хэсэг 3+2+3+3+3 = <strong>14 оноо (70%)</strong>, Газар зүйн хэсэг 1+2+1+1+1 = <strong>6 оноо (30%)</strong>, Нийлбэр = <strong>20 оноо (100%)</strong>.</p>
+        </div>
+
+        <!-- Complete Answer Key -->
+        <div class="aside-box" style="border-radius: var(--rounded-lg);">
+          <h3 class="sub-heading">Хариултын түлхүүр (Бүх даалгаврын жишиг хариулт)</h3>
+          <div class="answer-key-grid">
+            <div class="figure-card figure-card--compact">
+              <strong>Түвшин 1 (Даалгавар 1А, 1Б)</strong>
+              <ul style="margin: var(--space-xs) 0 0 0; padding-left: var(--space-md);">
+                <li>1. <strong>Хан Хэнтий уулын аймаг</strong> (хуучин Сэцэн хан).</li>
+                <li>2. <strong>1994 онд, 1992 оны Үндсэн хуулийн дараа</strong> (Дархан-Уул, Орхон, Говьсүмбэр нэмэгдэж 21 аймаг болсон).</li>
+                <li>3. <strong>Орвог гашууны бор толгой</strong> (х.ө 41°35′, з.у 105°00′).</li>
+              </ul>
+            </div>
+            <div class="figure-card figure-card--compact">
+              <strong>Түвшин 2 (Даалгавар 2А, 2Б)</strong>
+              <ul style="margin: var(--space-xs) 0 0 0; padding-left: var(--space-md);">
+                <li>А. <strong>Эдийн засаг, газар зүйн бүсчлэлд тулгуурлан ард түмэнд үйлчлэх захиргааг ойртуулах</strong>.</li>
+                <li>Б. <strong>Феодалын хэргэм цолны нэршлийг халж, эх орны газар зүйн онцлогоор нэрлэх</strong>.</li>
+                <li>2Б жишиг: 2392 км сунасан уудам нутаг, 1000 м-ээс өндөр гадарга нь тээвэр, харилцааг хүндрүүлдэг тул бүс нутгийн төвүүдийг олон байгуулж, зам харилцаатай уялдуулан аймаг, сумдыг хуваарилах шаардлага үүсгэдэг.</li>
+              </ul>
+            </div>
+            <div class="figure-card figure-card--compact">
+              <strong>Түвшин 3 (Даалгавар 3А)</strong>
+              <ul style="margin: var(--space-xs) 0 0 0; padding-left: var(--space-md);">
+                <li>1) <strong>Цэцэрлэг Мандал уулын аймаг</strong> (хуучин Сайн ноён хан аймаг).</li>
+                <li>2) <strong>Сэцэн хан аймаг / Хан Хэнтий уулын аймаг</strong> (Дорнод Монголын тал, Хөх нуур 560 м).</li>
+              </ul>
+            </div>
+            <div class="figure-card figure-card--compact">
+              <strong>Түвшин 4 (Хүснэгт 1 ба 2)</strong>
+              <ul style="margin: var(--space-xs) 0 0 0; padding-left: var(--space-md);">
+                <li>Хүснэгт 1: Халхын <strong>4 аймаг</strong>; 1923 он — <strong>Уул, усны газар зүйн нэрээр</strong>; 1931 он — <strong>Хошууг халж: Аймаг → Сум → Баг/Бригад</strong>; 1992 он — <strong>21 аймаг, 330 сум, нийслэл (9 дүүрэг)</strong>.</li>
+                <li>Хүснэгт 2: Ойт хээр — <strong>нутаг бага, сум олон, тариалан-мал аж ахуй</strong>; Говь — <strong>нэг сумын нутаг маш өргөн уудам, уул уурхай, говийн мал аж ахуй</strong>.</li>
+              </ul>
+            </div>
+            <div class="figure-card figure-card--compact">
+              <strong>Түвшин 5 ба 6 (Жишиг үнэлгээ)</strong>
+              <ul style="margin: var(--space-xs) 0 0 0; padding-left: var(--space-md);">
+                <li>Түвшин 5: 1931 оны шинэчлэлийн эерэг тал (засаг захиргаа ард түмэнд ойртсон, эдийн засагт нийцсэн) ба сөрөг тал (уламжлалт хошууны нэр, нутгийн ой санамж тасарсан)-ыг хоёуланг нь дурдсан байх.</li>
+                <li>Түвшин 6: Оюуны зураглалд дор хаяж 2 шинэ зангилаа нэмж, төсөлдөө голын сав/уур амьсгалын +2.24°C дулаарлыг түүхэн сургамжтай холбосон бол бүтэн оноо өгнө.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="aside-box" style="margin-top: var(--space-sm);">
+    <span class="dossier-meta">ЭХ СУРВАЛЖ БА НОМ ЗҮЙ</span>
+    <p style="margin: var(--space-xs) 0 0 0; font-size: 0.9375rem; color: var(--on-surface-variant);">
+      Е.Батчулуун, Г.Юмчмаа, Ц.Сэр-Од, Ц.Цэндсүрэн, Л.Одмандах «Газар зүй VIII» (Боловсрол, Шинжлэх Ухааны Яам, УБ, 2023 он); Монгол Улсын Үндсэн хууль (1992 он, 57 дугаар зүйл); Монгол Улсын засаг захиргаа, нутаг дэвсгэрийн хуваарийн түүхэн лавлах (1206–2026).
+    </p>
+  </footer>
+
+</main>
+
+<api-shim></api-shim>
+
+<script>
+const DEFAULT_STATE = {
+  student: { name: ``, className: ``, date: `2026-11-23` },
+  quiz: { q1: ``, q2: ``, q3: `` },
+  understanding: { u1: ``, u2: ``, u3: `` },
+  appTask: { app1: ``, app2: `` },
+  tables: { h1: ``, h2: ``, h3: ``, h4: ``, g1: ``, g2: `` },
+  evalData: { stance: ``, critHist: false, critGeo: false, critSvc: false, reason: `` },
+  mindMapNodes: [],
+  project: { region: ``, title: ``, history: ``, geo: `` },
+  selfEval: { c0: -1, c1: -1, c2: -1, c3: -1, c4: -1, c5: -1, c6: -1, c7: -1, reflect: `` },
+  rubric: { r1: 0, r2: 0, r3: 0, r4: 0, r5: 0 },
+  teacherOpen: false
+};
+
+let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+const REGION_DATA = {
+  west: {
+    title: `Ховдын хязгаар / Чандмань уул / Баруун бүс`,
+    history: `<strong>Түүхэн угсаа (70%):</strong> Манжийн үеийн Ховдын хязгаар, Дөрвөдийн 2 аймаг → 1925–1930 онд Чандмань уулын аймаг → Одоогийн Баян-Өлгий, Увс, Ховд аймаг.`,
+    geo: `<strong>Газар зүйн онцлог (30%):</strong> Монгол Алтайн өндөр уулс (Хүйтэн оргил 4374 м, Потанины мөсөн гол), баруун захын цэг Мааньт уул (х.ө 48°35′, з.у 87°44′), Их нууруудын хотгор, дотоодын ай сав.`
+  },
+  zasagt: {
+    title: `Засагт хан / Хантайшир уул / Алтай–Хангай зааг`,
+    history: `<strong>Түүхэн угсаа (70%):</strong> Халхын баруун жигүүр Засагт хан аймаг → 1923 онд Хантайшир уулын аймаг → Одоогийн Говь-Алтай, Завхан болон Хөвсгөлийн баруун хэсэг.`,
+    geo: `<strong>Газар зүйн онцлог (30%):</strong> Отгонтэнгэр, Хантайширын нуруу, Завхан голын сав (эх 2129 м, адаг 1030 м), Алтайн өвөр говийн хуурай бүс хосолсон.`
+  },
+  sainnoyon: {
+    title: `Сайн ноён хан / Цэцэрлэг Мандал уул / Хангайн бүс`,
+    history: `<strong>Түүхэн угсаа (70%):</strong> 1725 онд байгуулагдсан Сайн ноён хан аймаг → 1923 онд Цэцэрлэг Мандал уулын аймаг → Одоогийн Архангай, Өвөрхангай, Баянхонгор, Хөвсгөлийн хэсэг.`,
+    geo: `<strong>Газар зүйн онцлог (30%):</strong> Хангайн нуруу (д.т.д. 2000–2500 м), Орхон голын эх (3021 м), Эхийн голын цөлийн баянбүрд (36 мм тунадас — хамгийн хуурай цэг).`
+  },
+  tusheet: {
+    title: `Түшээт хан / Богд хан уул / Төвийн бүс`,
+    history: `<strong>Түүхэн угсаа (70%):</strong> Халхын голомт Түшээт хан аймаг → 1923 онд Богд хан уулын аймаг → Одоогийн Төв, Сэлэнгэ, Булган, Дархан-Уул, Орхон, Дундговь, Өмнөговь, Говьсүмбэр ба Улаанбаатар.`,
+    geo: `<strong>Газар зүйн онцлог (30%):</strong> Хойд хэсгээр Сэлэнгэ–Туулын ойт хээр ба тариалангийн гол бүс; өмнөд хэсгээр Орвог гашууны бор толгой (өмнөд захын цэг х.ө 41°35′), Өмнөговийн говь.`
+  },
+  setsen: {
+    title: `Сэцэн хан / Хан Хэнтий уул / Зүүн бүс`,
+    history: `<strong>Түүхэн угсаа (70%):</strong> Халхын зүүн жигүүр Сэцэн хан аймаг → 1923 онд Хан Хэнтий уулын аймаг → Одоогийн Хэнтий, Дорнод, Сүхбаатар аймгууд.`,
+    geo: `<strong>Газар зүйн онцлог (30%):</strong> Хэнтийн нуруу, Дорнод Монголын тал (д.т.д. 1000–1500 м), хамгийн нам цэг Хөх нуур (560 м), зүүн захын цэг Модтой хамар (з.у 119°56′), Номхон далайн ай сав (Хэрлэн, Онон, Халх гол).`
+  }
+};
+
+const MINDMAP_BRANCHES = {
+  hist1: `<strong>1. Мянгатын систем (1206 он):</strong> Чингис хаан овгийн зохион байгуулалтыг халж, аравт–зуут–мянгат–түмэн бүтэц тогтоосон нь цэрэг ба засаг захиргааг шууд холбосон анхны төвлөрсөн тогтолцоо юм.`,
+  hist2: `<strong>2. Манжийн үеийн 4 аймаг (1691–1911):</strong> Халхыг 4 аймаг, олон хошуу болгон хувааж, Ховд, Хөвсгөлийг тусгаарласан нь хүчийг сарниулах зорилготой байсан ч нутгийн хил зааг нарийссан.`,
+  hist3: `<strong>3. 1923 ба 1931 оны шинэчлэл:</strong> 1923 онд феодалын нэрийг уул, усны газар зүйн нэрээр сольсон. 1931 онд хошуудыг бүрэн халж, 13 аймаг байгуулсан нь орчин үеийн сум, аймгийн эхлэл болов.`,
+  hist4: `<strong>4. 1992 оны Үндсэн хууль:</strong> Аймаг, нийслэл, сум, дүүрэг, баг, хорооны шатлалыг хуульчилж, 1994 онд Дархан-Уул, Орхон, Говьсүмбэр аймаг байгуулагдаж 21 аймаг, 330 сум бүрдсэн.`,
+  geo1: `<strong>Байрлал ба Гадарга (30%):</strong> Өргөргийн дагуу 2392 км сунаж тогтсон, нутгийн 80% нь 1000 м-ээс өндөр, далайд гарцгүй орон. Уулс нь агаарын урсгал болон зам харилцааг чиглүүлдэг.`,
+  geo2: `<strong>Уур амьсгал ба Ус (30%):</strong> Ойт хээр, хээр, говь, цөлийн 4 бүс ба 29 голын сав газар нь бүс нутгийн аж ахуй, бэлчээрийн даац, сумын нутгийн том ба жижиг хэмжээг тодорхойлно.`,
+  geo3: `<strong>Хүн амын суурьшил (30%):</strong> 1918 оны 647 мянгаас 2015 онд 3 сая давсан өсөлт нь гол мөрөн, дэд бүтэц, нийслэл дагасан төвлөрлийг үүсгэж, засаг захиргааны шинэ сорилт тавьж байна.`
+};
+
+const SELF_EVAL_ITEMS = [
+  `Их Монгол Улсын мянгатын систем ба Гурван түмний бүтцийг тайлбарлаж чадна. (Түвшин 1 · Түүх)`,
+  `Манжийн үеийн 4 аймаг, Ховдын хязгаараас 1923 оны уул усны нэршил хүртэлх өөрчлөлтийг ялгаж чадна. (Түвшин 2 · Түүх)`,
+  `1931 оны шинэчлэл болон 1992 оны Үндсэн хуулийн 21 аймаг, 330 сумын тогтолцоог харьцуулж чадна. (Түвшин 3–4 · Түүх)`,
+  `Монгол орны 4 захын цэг, д.т.д. дундаж өндөр (1580 м), өргөргийн суналтыг нэрлэж чадна. (Түвшин 1 · Газар зүй)`,
+  `Байгалийн бүс, голын сав газар ба сум, аймгийн нутгийн хэмжээ, хүн амын тархалтын холбоог шинжилж чадна. (Түвшин 4 · Газар зүй)`,
+  `Өнөөгийн засаг захиргааны хуваарийн давуу ба сул талыг баримтад тулгуурлан үнэлж чадна. (Түвшин 5 · Түүх/Газар зүй)`,
+  `Оюуны зураглалд өөрийн зангилааг нэмж, түүх-газар зүйн уялдааг нэгтгэн харуулж чадна. (Түвшин 6 · Бүтээх)`,
+  `Бүсчилсэн хөгжлийн бодит асуудлыг түүхэн уламжлал ба газар зүйн өгөгдлөөр шийдвэрлэх санал гаргаж чадна. (Түвшин 6 · Бүтээх)`
+];
+
+function renderSelfEvalList() {
+  const container = document.getElementById('self-eval-list');
+  if (!container) return;
+  let html = ``;
+  for (let i = 0; i < SELF_EVAL_ITEMS.length; i++) {
+    const val = appState.selfEval[`c` + i];
+    html += `
+      <div class="checklist-row">
+        <div><strong>${i + 1}.</strong> ${SELF_EVAL_ITEMS[i]}</div>
+        <div class="btn-row" role="group" aria-label="Өөрийн үнэлгээ ${i + 1}">
+          <button type="button" class="layer-btn ${val === 2 ? 'is-active' : ''}" onclick="setSelfEvalItem(${i}, 2)">Чадна (2)</button>
+          <button type="button" class="layer-btn ${val === 1 ? 'is-active' : ''}" onclick="setSelfEvalItem(${i}, 1)">Дунд (1)</button>
+          <button type="button" class="layer-btn ${val === 0 ? 'is-active' : ''}" onclick="setSelfEvalItem(${i}, 0)">Давтъя (0)</button>
+        </div>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+  updateSelfEvalScore();
+}
+
+function setSelfEvalItem(idx, score) {
+  appState.selfEval[`c` + idx] = score;
+  renderSelfEvalList();
+  updateProgress();
+  saveState();
+}
+
+function saveSelfReflect(val) {
+  appState.selfEval.reflect = val;
+  updateProgress();
+  saveState();
+}
+
+function updateSelfEvalScore() {
+  let total = 0;
+  for (let i = 0; i < SELF_EVAL_ITEMS.length; i++) {
+    const v = appState.selfEval[`c` + i];
+    if (typeof v === 'number' && v >= 0) total += v;
+  }
+  const pct = Math.round((total / 16) * 100);
+  const el = document.getElementById('self-eval-score');
+  if (el) el.textContent = `Бэлэн байдал: ${total} / 16 оноо (${pct}%)`;
+}
+
+function updateStudentField(field, val) {
+  appState.student[field] = val;
+  saveState();
+}
+
+function saveQuiz(key, val) {
+  appState.quiz[key] = val;
+  updateProgress();
+  saveState();
+}
+
+function checkLevel1() {
+  const fb = document.getElementById('fb-level1');
+  if (!fb) return;
+  const q1 = appState.quiz.q1;
+  const q2 = appState.quiz.q2;
+  const q3 = appState.quiz.q3;
+  if (!q1 || !q2 || !q3) {
+    fb.className = `feedback-banner is-visible feedback-banner--warn`;
+    fb.textContent = `Гурван асуултад бүгдэд нь хариулт сонгосны дараа шалгана уу.`;
+    return;
+  }
+  let score = 0;
+  if (q1 === 'b') score++;
+  if (q2 === 'b') score++;
+  if (q3 === 'b') score++;
+  if (score === 3) {
+    fb.className = `feedback-banner is-visible feedback-banner--ok`;
+    fb.textContent = `Маш сайн! 3/3 зөв. Та 1923 оны Хан Хэнтий уулын аймаг, 1994 оны 21 аймгийн бүтэц болон өмнөд захын цэгийг зөв тодорхойллоо.`;
+  } else {
+    fb.className = `feedback-banner is-visible feedback-banner--err`;
+    fb.textContent = `Нийт ${score}/3 зөв байна. Онолын лавламжийн 1923 он, 1992–1994 он болон 4 захын цэгийн хэсгийг дахин нягтална уу.`;
+  }
+}
+
+function saveUnderstanding(key, val) {
+  appState.understanding[key] = val;
+  updateProgress();
+  saveState();
+}
+
+function checkLevel2() {
+  const fb = document.getElementById('fb-level2');
+  if (!fb) return;
+  const u1 = appState.understanding.u1;
+  const u2 = appState.understanding.u2;
+  if (!u1 || !u2) {
+    fb.className = `feedback-banner is-visible feedback-banner--warn`;
+    fb.textContent = `Хоёр асуултын сонголтыг хоёуланг нь бөглөнө үү.`;
+    return;
+  }
+  const ok1 = u1 === 'econ';
+  const ok2 = u2 === 'geo_symbol';
+  if (ok1 && ok2) {
+    fb.className = `feedback-banner is-visible feedback-banner--ok`;
+    fb.textContent = `Зөв ойлголт! 1923 онд феодалын цол нэрийг уул, усны нэрээр халж, 1931 онд эдийн засаг-газар зүйн бүсчлэлд тулгуурлан шинэчилсэн.`;
+  } else {
+    fb.className = `feedback-banner is-visible feedback-banner--err`;
+    fb.textContent = `Дахин бодоорой: 1923 он нь феодалын нэршлийг халсан бол 1931 он нь эдийн засаг, газар зүйн бүсчлэлийн шинэчлэл байсан.`;
+  }
+}
+
+function setMapLayer(layer) {
+  const ids = ['manchu', '1923', 'modern', 'geo'];
+  for (let i = 0; i < ids.length; i++) {
+    const btn = document.getElementById('btn-layer-' + ids[i]);
+    if (btn) btn.classList.toggle('is-active', ids[i] === layer);
+  }
+  const lblWest = document.getElementById('lbl-west');
+  const lblZasagt = document.getElementById('lbl-zasagt');
+  const lblSain = document.getElementById('lbl-sainnoyon');
+  const lblTusheet = document.getElementById('lbl-tusheet');
+  const lblSetsen = document.getElementById('lbl-setsen');
+  const geoOverlay = document.getElementById('geo-overlay');
+
+  if (layer === 'manchu') {
+    if (lblWest) lblWest.textContent = `Ховдын хязгаар`;
+    if (lblZasagt) lblZasagt.textContent = `Засагт хан`;
+    if (lblSain) lblSain.textContent = `Сайн ноён хан`;
+    if (lblTusheet) lblTusheet.textContent = `Түшээт хан`;
+    if (lblSetsen) lblSetsen.textContent = `Сэцэн хан`;
+    if (geoOverlay) geoOverlay.setAttribute('opacity', '0.45');
+  } else if (layer === '1923') {
+    if (lblWest) lblWest.textContent = `Чандмань уул`;
+    if (lblZasagt) lblZasagt.textContent = `Хантайшир уул`;
+    if (lblSain) lblSain.textContent = `Цэцэрлэг Мандал`;
+    if (lblTusheet) lblTusheet.textContent = `Богд хан уул`;
+    if (lblSetsen) lblSetsen.textContent = `Хан Хэнтий уул`;
+    if (geoOverlay) geoOverlay.setAttribute('opacity', '0.55');
+  } else if (layer === 'modern') {
+    if (lblWest) lblWest.textContent = `Баян-Өлгий·Увс·Ховд`;
+    if (lblZasagt) lblZasagt.textContent = `Завхан·Говь-Алтай`;
+    if (lblSain) lblSain.textContent = `Хангайн аймгууд`;
+    if (lblTusheet) lblTusheet.textContent = `Төв·Сэлэнгэ·Говь`;
+    if (lblSetsen) lblSetsen.textContent = `Хэнтий·Дорнод·Сүхбаатар`;
+    if (geoOverlay) geoOverlay.setAttribute('opacity', '0.6');
+  } else {
+    if (lblWest) lblWest.textContent = `Өндөр уулс (4374м)`;
+    if (lblZasagt) lblZasagt.textContent = `Алтайн зааг`;
+    if (lblSain) lblSain.textContent = `Ойт хээр / Говь`;
+    if (lblTusheet) lblTusheet.textContent = `Сэлэнгэ–Туул сав`;
+    if (lblSetsen) lblSetsen.textContent = `Хөх нуур (560м)`;
+    if (geoOverlay) geoOverlay.setAttribute('opacity', '1');
+  }
+}
+
+function selectRegion(regionKey) {
+  const keys = ['west', 'zasagt', 'sainnoyon', 'tusheet', 'setsen'];
+  for (let i = 0; i < keys.length; i++) {
+    const el = document.getElementById('reg-' + keys[i]);
+    if (el) el.classList.toggle('is-selected', keys[i] === regionKey);
+  }
+  const data = REGION_DATA[regionKey];
+  if (!data) return;
+  const titleEl = document.getElementById('insp-title');
+  const histEl = document.getElementById('insp-history');
+  const geoEl = document.getElementById('insp-geo');
+  if (titleEl) titleEl.textContent = data.title;
+  if (histEl) histEl.innerHTML = data.history;
+  if (geoEl) geoEl.innerHTML = data.geo;
+}
+
+function saveAppTask(key, val) {
+  appState.appTask[key] = val;
+  updateProgress();
+  saveState();
+}
+
+function checkLevel3() {
+  const fb = document.getElementById('fb-level3');
+  if (!fb) return;
+  const a1 = appState.appTask.app1;
+  const a2 = appState.appTask.app2;
+  if (!a1 || !a2) {
+    fb.className = `feedback-banner is-visible feedback-banner--warn`;
+    fb.textContent = `Хоёр асуултын хариуг сонгоно уу.`;
+    return;
+  }
+  if (a1 === 'tsetserleg' && a2 === 'setsen') {
+    fb.className = `feedback-banner is-visible feedback-banner--ok`;
+    fb.textContent = `Зөв хэрэглэлээ! Сайн ноён хан → Цэцэрлэг Мандал уул; Хөх нуур ба Дорнод тал → Сэцэн хан аймагт хамаардаг.`;
+  } else {
+    fb.className = `feedback-banner is-visible feedback-banner--err`;
+    fb.textContent = `Зураг дээрх Сайн ноён хан ба Сэцэн хан бүсүүдийг дарж угсаа ба газар зүйн өгөгдлийг нь харьцуулж үзнэ үү.`;
+  }
+}
+
+function saveTableField(key, val) {
+  appState.tables[key] = val;
+  updateProgress();
+  saveState();
+}
+
+function checkTable1() {
+  const fb = document.getElementById('fb-table1');
+  if (!fb) return;
+  const t = appState.tables;
+  if (!t.h1 || !t.h2 || !t.h3 || !t.h4) {
+    fb.className = `feedback-banner is-visible feedback-banner--warn`;
+    fb.textContent = `Хүснэгт 1-ийн бүх 4 хоосон нүдийг бөглөнө үү.`;
+    return;
+  }
+  let ok = 0;
+  if (t.h1 === '4') ok++;
+  if (t.h2 === 'nature') ok++;
+  if (t.h3 === 'aimag_sum') ok++;
+  if (t.h4 === '21') ok++;
+  if (ok === 4) {
+    fb.className = `feedback-banner is-visible feedback-banner--ok`;
+    fb.textContent = `Бүгд зөв (4/4)! Түүхэн 5 үе шатны залгамж холбоог амжилттай харьцууллаа.`;
+  } else {
+    fb.className = `feedback-banner is-visible feedback-banner--err`;
+    fb.textContent = `${ok}/4 зөв байна. 1923 оны уул усны нэр болон 1931 онд хошууг халсныг дахин шалгаарай.`;
+  }
+}
+
+function checkTable2() {
+  const fb = document.getElementById('fb-table2');
+  if (!fb) return;
+  const t = appState.tables;
+  if (!t.g1 || !t.g2) {
+    fb.className = `feedback-banner is-visible feedback-banner--warn`;
+    fb.textContent = `Хүснэгт 2-ын хоёр нүдийг бөглөнө үү.`;
+    return;
+  }
+  if (t.g1 === 'dense' && t.g2 === 'large') {
+    fb.className = `feedback-banner is-visible feedback-banner--ok`;
+    fb.textContent = `Зөв шинжилгээ! Ойт хээрт нутаг нягт, тариалан-мал аж ахуй хосолдог бол говьд бэлчээрийн даацаас шалтгаалан сумын нутаг өргөн уудам байдаг.`;
+  } else {
+    fb.className = `feedback-banner is-visible feedback-banner--err`;
+    fb.textContent = `Дахин нягтална уу: Хур тунадас, усны нөөц нь нэгж сумын нутгийн хэмжээнд шууд нөлөөлдөг.`;
+  }
+}
+
+function saveEval(key, val) {
+  appState.evalData[key] = val;
+  updateProgress();
+  saveState();
+}
+
+function saveEvalCrit(key, checked) {
+  if (key === 'hist') appState.evalData.critHist = checked;
+  if (key === 'geo') appState.evalData.critGeo = checked;
+  if (key === 'svc') appState.evalData.critSvc = checked;
+  saveState();
+}
+
+function focusMindBranch(key) {
+  const box = document.getElementById('mindmap-detail');
+  if (!box) return;
+  const text = MINDMAP_BRANCHES[key];
+  if (text) box.innerHTML = text;
+}
+
+function addMindMapNode() {
+  const branchEl = document.getElementById('mm-branch');
+  const textEl = document.getElementById('mm-text');
+  const msgEl = document.getElementById('mm-message');
+  if (!branchEl || !textEl) return;
+  const text = textEl.value.trim();
+  if (text.length < 4) {
+    if (msgEl) msgEl.textContent = `Дор хаяж 4 тэмдэгт бүхий түлхүүр баримт бичнэ үү.`;
+    return;
+  }
+  if (msgEl) msgEl.textContent = ``;
+  appState.mindMapNodes.push({ branch: branchEl.value, text: text });
+  textEl.value = ``;
+  renderMindMapNodes();
+  updateProgress();
+  saveState();
+}
+
+function removeMindMapNode(idx) {
+  appState.mindMapNodes.splice(idx, 1);
+  renderMindMapNodes();
+  updateProgress();
+  saveState();
+}
+
+function renderMindMapNodes() {
+  const listEl = document.getElementById('mm-nodes-list');
+  if (!listEl) return;
+  if (!appState.mindMapNodes.length) {
+    listEl.innerHTML = `<span class="field-hint">Одоогоор нэмсэн зангилаа байхгүй байна.</span>`;
+    return;
+  }
+  let html = ``;
+  for (let i = 0; i < appState.mindMapNodes.length; i++) {
+    const n = appState.mindMapNodes[i];
+    const safeBranch = escapeHtml(n.branch);
+    const safeText = escapeHtml(n.text);
+    html += `<span class="node-chip"><span><strong>[${safeBranch}]</strong> ${safeText}</span><button type="button" aria-label="Устгах" onclick="removeMindMapNode(${i})">×</button></span>`;
+  }
+  listEl.innerHTML = html;
+}
+
+function saveProject(key, val) {
+  appState.project[key] = val;
+  renderProjectPreview();
+  updateProgress();
+  saveState();
+}
+
+function renderProjectPreview() {
+  const preview = document.getElementById('project-preview');
+  if (!preview) return;
+  const p = appState.project;
+  if (!p.region && !p.title && !p.history && !p.geo) {
+    preview.innerHTML = `<p class="field-hint" style="margin:0;">Зүүн талын талбаруудыг бөглөхөд таны бүтээлч төслийн хураангуй энд автоматаар хэлбэржинэ.</p>`;
+    return;
+  }
+  preview.innerHTML = `
+    <div style="display:grid; gap:var(--space-xs);">
+      <span class="dossier-meta">${escapeHtml(p.region || 'Бүс сонгогдоогүй')}</span>
+      <h4 class="sub-heading" style="margin:0;">${escapeHtml(p.title || 'Нэргүй төсөл')}</h4>
+      <p style="margin:0; font-size:0.9375rem;"><strong>Түүхэн уламжлал (70%):</strong> ${escapeHtml(p.history || 'Бичигдээгүй...')}</p>
+      <p style="margin:0; font-size:0.9375rem;"><strong>Газар зүйн шийдэл (30%):</strong> ${escapeHtml(p.geo || 'Бичигдээгүй...')}</p>
+    </div>
+  `;
+}
+
+function toggleTeacherPanel() {
+  appState.teacherOpen = !appState.teacherOpen;
+  applyTeacherPanelState();
+  saveState();
+}
+
+function applyTeacherPanelState() {
+  const body = document.getElementById('teacher-body');
+  const lbl = document.getElementById('teacher-btn-label');
+  if (body) body.classList.toggle('is-open', appState.teacherOpen);
+  if (lbl) {
+    lbl.textContent = appState.teacherOpen ? `Багшийн рубрикийг хаах` : `Багшийн рубрик ба түлхүүрийг нээх`;
+  }
+}
+
+function saveRubricScore(key, val) {
+  let num = parseInt(val, 10);
+  if (isNaN(num)) num = 0;
+  if (num < 0) num = 0;
+  if (num > 4) num = 4;
+  appState.rubric[key] = num;
+  const input = document.getElementById('rubric-' + key);
+  if (input) input.value = String(num);
+  updateRubricTotal();
+  saveState();
+}
+
+function updateRubricTotal() {
+  const r = appState.rubric;
+  const total = r.r1 + r.r2 + r.r3 + r.r4 + r.r5;
+  // Exact 70% History / 30% Geography weighted breakdown out of 20
+  const histPts = ((r.r1 * 3 + r.r2 * 2 + r.r3 * 3 + r.r4 * 3 + r.r5 * 3) / 4).toFixed(1);
+  const geoPts = ((r.r1 * 1 + r.r2 * 2 + r.r3 * 1 + r.r4 * 1 + r.r5 * 1) / 4).toFixed(1);
+  const badge = document.getElementById('teacher-total-badge');
+  if (badge) {
+    badge.textContent = `Нийт оноо: ${total} / 20 (Түүх ${histPts}/14 · Газар зүй ${geoPts}/6)`;
+  }
+}
+
+function updateProgress() {
+  let done = 0;
+  const totalTasks = 12;
+  if (appState.quiz.q1) done++;
+  if (appState.quiz.q2) done++;
+  if (appState.quiz.q3) done++;
+  if (appState.understanding.u1 && appState.understanding.u2) done++;
+  if (appState.understanding.u3.trim().length > 10) done++;
+  if (appState.appTask.app1 && appState.appTask.app2) done++;
+  if (appState.tables.h1 && appState.tables.h2 && appState.tables.h3 && appState.tables.h4) done++;
+  if (appState.tables.g1 && appState.tables.g2) done++;
+  if (appState.evalData.stance && appState.evalData.reason.trim().length > 10) done++;
+  if (appState.mindMapNodes.length > 0) done++;
+  if (appState.project.region && appState.project.title.trim().length > 2) done++;
+  let selfCount = 0;
+  for (let i = 0; i < SELF_EVAL_ITEMS.length; i++) {
+    if (appState.selfEval[`c` + i] >= 0) selfCount++;
+  }
+  if (selfCount >= 4) done++;
+
+  const pct = Math.round((done / totalTasks) * 100);
+  const txt = document.getElementById('progress-text');
+  const fill = document.getElementById('progress-fill');
+  if (txt) txt.textContent = `${done} / ${totalTasks} даалгавар (${pct}%)`;
+  if (fill) fill.style.width = `${pct}%`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function exportWorksheet() {
+  const s = appState.student;
+  const lines = [
+    `МОНГОЛ УЛСЫН ЗАСАГ ЗАХИРГАА, НУТАГ ДЭВСГЭРИЙН ХУВААРИЙН ХУВЬСАЛ`,
+    `Сурагч: ${s.name || 'Тодорхойгүй'} | Анги: ${s.className || 'Тодорхойгүй'} | Огноо: ${s.date}`,
+    `Агуулгын харьцаа: Түүх 70% · Газар зүй 30%`,
+    `--------------------------------------------------`,
+    `1. Түвшин 1 хариултууд: q1=${appState.quiz.q1}, q2=${appState.quiz.q2}, q3=${appState.quiz.q3}`,
+    `2. Түвшин 2 эргэцүүлэл: ${appState.understanding.u3 || 'Хоосон'}`,
+    `3. Түвшин 5 үнэлгээ (${appState.evalData.stance || 'Сонгоогүй'}): ${appState.evalData.reason || 'Хоосон'}`,
+    `4. Оюуны зураглалд нэмсэн зангилаа (${appState.mindMapNodes.length}):`,
+    appState.mindMapNodes.map(n => `   - [${n.branch}] ${n.text}`).join('\n') || `   - Байхгүй`,
+    `5. Төслийн санал (${appState.project.title || 'Нэргүй'}):`,
+    `   Бүс: ${appState.project.region}`,
+    `   Түүхэн уламжлал: ${appState.project.history}`,
+    `   Газар зүйн шийдэл: ${appState.project.geo}`,
+    `6. Сурагчийн дүгнэлт: ${appState.selfEval.reflect || 'Хоосон'}`
+  ];
+  const content = lines.join('\n');
+  if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === 'function') {
+    window.notebookAppApi.triggerFileDownload({
+      content: content,
+      contentType: 'text/plain',
+      encoding: 'UTF-8',
+      filename: `zazag_zakhirgaa_ajlyn_huudas.txt`
+    });
+  }
+}
+
+function handleReset(btn) {
+  if (btn.dataset.armed !== 'true') {
+    btn.dataset.armed = 'true';
+    btn.textContent = `Баталгаажуулах (дахин дарна уу)`;
+    return;
+  }
+  btn.dataset.armed = 'false';
+  btn.textContent = `Шинэчлэх`;
+  appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  applyStateToDom();
+  saveState();
+}
+
+function applyStateToDom() {
+  const s = appState.student;
+  const elName = document.getElementById('student-name');
+  const elClass = document.getElementById('student-class');
+  const elDate = document.getElementById('student-date');
+  if (elName) elName.value = s.name || ``;
+  if (elClass) elClass.value = s.className || ``;
+  if (elDate) elDate.value = s.date || `2026-11-23`;
+
+  ['q1', 'q2', 'q3'].forEach(function(q) {
+    const radios = document.querySelectorAll(`input[name="${q}"]`);
+    radios.forEach(function(r) {
+      r.checked = (r.value === appState.quiz[q]);
+    });
+  });
+
+  const u1 = document.getElementById('u1');
+  const u2 = document.getElementById('u2');
+  const u3 = document.getElementById('u3-text');
+  if (u1) u1.value = appState.understanding.u1 || ``;
+  if (u2) u2.value = appState.understanding.u2 || ``;
+  if (u3) u3.value = appState.understanding.u3 || ``;
+
+  const a1 = document.getElementById('app1');
+  const a2 = document.getElementById('app2');
+  if (a1) a1.value = appState.appTask.app1 || ``;
+  if (a2) a2.value = appState.appTask.app2 || ``;
+
+  ['h1', 'h2', 'h3', 'h4', 'g1', 'g2'].forEach(function(k) {
+    const el = document.getElementById('tbl-' + k);
+    if (el) el.value = appState.tables[k] || ``;
+  });
+
+  const es = document.getElementById('eval-stance');
+  const ch = document.getElementById('crit-hist');
+  const cg = document.getElementById('crit-geo');
+  const cs = document.getElementById('crit-svc');
+  const er = document.getElementById('eval-reason');
+  if (es) es.value = appState.evalData.stance || ``;
+  if (ch) ch.checked = Boolean(appState.evalData.critHist);
+  if (cg) cg.checked = Boolean(appState.evalData.critGeo);
+  if (cs) cs.checked = Boolean(appState.evalData.critSvc);
+  if (er) er.value = appState.evalData.reason || ``;
+
+  const pr = document.getElementById('proj-region');
+  const pt = document.getElementById('proj-title');
+  const ph = document.getElementById('proj-history');
+  const pg = document.getElementById('proj-geo');
+  if (pr) pr.value = appState.project.region || ``;
+  if (pt) pt.value = appState.project.title || ``;
+  if (ph) ph.value = appState.project.history || ``;
+  if (pg) pg.value = appState.project.geo || ``;
+
+  const sr = document.getElementById('self-reflect');
+  if (sr) sr.value = appState.selfEval.reflect || ``;
+
+  ['r1', 'r2', 'r3', 'r4', 'r5'].forEach(function(rk) {
+    const re = document.getElementById('rubric-' + rk);
+    if (re) re.value = String(appState.rubric[rk] || 0);
+  });
+
+  renderSelfEvalList();
+  renderMindMapNodes();
+  renderProjectPreview();
+  applyTeacherPanelState();
+  updateRubricTotal();
+  updateProgress();
+}
+
+async function saveState() {
+  const statusEl = document.getElementById('save-status');
+  if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === 'function') {
+    try {
+      await window.notebookAppApi.setAppState(appState);
+      if (statusEl) statusEl.textContent = `Хадгалах төлөв: Хадгалагдлаа`;
+    } catch (err) {
+      if (statusEl) statusEl.textContent = `Хадгалах төлөв: Түр санах ой`;
+    }
+  }
+}
+
+async function initApp() {
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+  if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === 'function') {
+    try {
+      const saved = await window.notebookAppApi.getAppState();
+      if (saved && typeof saved === 'object') {
+        appState = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), saved);
+      }
+    } catch (err) {
+      // Fallback to default state
+    }
+  }
+  applyStateToDom();
+  if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === 'function') {
+    window.notebookAppApi.notifyAppReady();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
